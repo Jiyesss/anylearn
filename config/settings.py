@@ -29,18 +29,26 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+THIRD_PARTY_APPS = [
+    "rest_framework",
+]
 
-INSTALLED_APPS = [
+CUSTOM_APPS = [
+    "users.apps.UsersConfig",
+    "scripts.apps.ScriptsConfig",
+    "diaries.apps.DiariesConfig",
+]
+
+SYSTEM_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "users.apps.UsersConfig",
-    "scripts.apps.ScriptsConfig",
-    "diaries.apps.DiariesConfig",
 ]
+
+INSTALLED_APPS = THIRD_PARTY_APPS + SYSTEM_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
