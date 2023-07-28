@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+from rest_framework import status
 from .models import Script
 from .serializers import ScriptSerializer, ScriptDetailSerializer
 
@@ -44,3 +45,8 @@ class ScriptDetail(APIView):
             )
         else:
             return Response(serializer.errors)
+
+    def delete(self, request, pk):
+        script = self.get_object(pk)
+        script.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
