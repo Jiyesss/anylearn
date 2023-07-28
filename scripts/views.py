@@ -28,3 +28,18 @@ class ScriptDetail(APIView):
         script = self.get_object(pk)
         serializer = ScriptDetailSerializer(script)
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        script = self.get_object(pk)
+        serializer = ScriptDetailSerializer(
+            script,
+            data=request.data,
+            partial=True,
+        )
+        if serializer.is_valid():
+            updated_script = serializer.save()
+            return Response(
+                ScriptDetailSerializer(updated_script).data,
+            )
+        else:
+            return Response(serializer.errors)
