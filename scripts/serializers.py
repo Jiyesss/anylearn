@@ -9,12 +9,9 @@ class TinyEmailSerializer(ModelSerializer):
 
 
 class ScriptSerializer(ModelSerializer):
-    email = TinyEmailSerializer()
-
     class Meta:
         model = Script
         fields = "__all__"
-        depth = 1
 
 
 class ScriptDetailSerializer(ModelSerializer):
