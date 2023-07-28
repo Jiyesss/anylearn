@@ -1,8 +1,59 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
 
+class UserManager(BaseUserManager):
+    def create_user(
+        self,
+        email,
+        name,
+        password,
+        birth,
+        phonenumber,
+        nickname,
+    ):
+        if not email:
+            raise ValueError("Users must have an email address")
+        if not name:
+            raise ValueError("Users must have a name")
+        if not password:
+            raise ValueError("Users must have a password")
+        if not birth:
+            raise ValueError("Users must have a birth")
+        if not phonenumber:
+            raise ValueError("Users must have a phonenumber")
+        if not nickname:
+            raise ValueError("Users must have a nickname")
+
+        user = self.model(
+            email=self.normalize_email(email),
+            birth=birth,
+            name=name,
+            password=password,
+            phonenumber=phonenumber,
+            nickname=nickname,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password):
+        user = self.create_user(
+            email,
+            password=password,
+        )
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
+
+
 class User(AbstractUser):
+    objects = UserManager()
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["birth"]
+
     # AbstractUser에서 받아온 필드 중 수정하고 싶지 않은 필드 지정하기
     first_name = models.CharField(
         max_length=150,
@@ -27,6 +78,15 @@ class User(AbstractUser):
     )
     nickname = models.CharField(
         max_length=30,
-        default="",
+        unique=True,
     )
-    email = models.EmailField()
+    email = models.EmailField(
+        unique=True,
+        max_length=155,
+    )
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
