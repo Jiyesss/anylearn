@@ -5,3 +5,7 @@ from django.db import models
 class Diary(models.Model):
     nowDate = models.DateField()
     diaryContents = models.ManyToManyField("scripts.Script")
+    user_email = models.ForeignKey(
+        "users.USer",
+        on_delete=models.CASCADE,
+    )

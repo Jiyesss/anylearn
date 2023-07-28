@@ -38,10 +38,22 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password):
+    def create_superuser(
+        self,
+        email,
+        birth,
+        name,
+        nickname,
+        phonenumber,
+        password,
+    ):
         user = self.create_user(
             email,
             password=password,
+            birth=birth,
+            name=name,
+            phonenumber=phonenumber,
+            nickname=nickname,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -52,7 +64,7 @@ class User(AbstractUser):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["birth"]
+    REQUIRED_FIELDS = ["birth", "name", "nickname", "phonenumber"]
 
     # AbstractUser에서 받아온 필드 중 수정하고 싶지 않은 필드 지정하기
     first_name = models.CharField(
@@ -78,15 +90,20 @@ class User(AbstractUser):
     )
     nickname = models.CharField(
         max_length=30,
-        unique=True,
     )
     email = models.EmailField(
-        unique=True,
         max_length=155,
+        unique=True,
     )
+    is_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     def has_perm(self, perm, obj=None):
         return True
 
     def has_module_perms(self, app_label):
         return True
+
+    @property
+    def is_staff(self):
+        return self.is_admin

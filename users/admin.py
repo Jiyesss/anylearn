@@ -32,3 +32,4 @@ class CustomerUserAdmin(UserAdmin):
         "nickname",
         "email",
     ]
+    list_filter = ("is_admin",)
