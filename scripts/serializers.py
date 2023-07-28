@@ -8,6 +8,15 @@ class TinyEmailSerializer(ModelSerializer):
         fields = ("email",)
 
 
+class ScriptTinySerializer(ModelSerializer):
+    class Meta:
+        model = Script
+        fields = (
+            "hashtag",
+            "contents",
+        )
+
+
 class ScriptSerializer(ModelSerializer):
     class Meta:
         model = Script
