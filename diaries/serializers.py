@@ -25,6 +25,6 @@ class TinyDiarySerializer(ModelSerializer):
     class Meta:
         model = Diary
         fields = (
-            "comments",
+            "comment",
             "diaryContents",
         )
