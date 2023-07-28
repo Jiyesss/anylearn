@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Script
+from .models import Script, Tag
 
 
 @admin.register(Script)
@@ -16,6 +16,6 @@ class ScriptAdmin(admin.ModelAdmin):
         return Script.hashtag
 
 
-@admin.register
+@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     pass
