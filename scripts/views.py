@@ -34,7 +34,7 @@ class ScriptDetail(APIView):
         serializer = ScriptDetailSerializer(
             script,
             data=request.data,
-            partial=True,
+            partial=True,  # partial = True는 필수 항목을 수정하지 않아도 error안난다는 의미
         )
         if serializer.is_valid():
             updated_script = serializer.save()
