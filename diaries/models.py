@@ -11,4 +11,5 @@ class Diary(models.Model):
     user_email = models.ForeignKey(
         "users.USer",
         on_delete=models.CASCADE,
+        related_name="diaries",
     )
