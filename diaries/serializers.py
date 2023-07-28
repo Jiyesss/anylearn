@@ -12,7 +12,7 @@ class DiarySerializer(ModelSerializer):
 
 # datil diary를 보기 위한 serializer
 class DiaryDetailSerializer(ModelSerializer):
-    email = TinyEmailSerializer()
+    user_email = TinyEmailSerializer()
 
     class Meta:
         model = Diary

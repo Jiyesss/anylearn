@@ -20,19 +20,19 @@ class Diaries(APIView):
 
 # /api/v1/diaries/[pk] url에 접근했을 때 API
 class DiaryDetail(APIView):
-    def get_object(self, pk):
+    def get_object(self, id):
         try:
-            return Diary.objects.get(pk=pk)
+            return Diary.objects.get(id=id)
         except Diary.DoesNotExist:
             raise NotFound
 
-    def get(self, request, pk):
-        diary = self.get_object(pk)
+    def get(self, request, id):
+        diary = self.get_object(id)
         serializer = DiaryDetailSerializer(diary)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        diary = self.get_object(pk)
+    def put(self, request, id):
+        diary = self.get_object(id)
         serializer = TinyDiarySerializer(
             diary,
             data=request.data,
@@ -46,7 +46,7 @@ class DiaryDetail(APIView):
         else:
             return Response(serializer.errors)
 
-    def delete(self, request, pk):
-        diary = self.get_object(pk)
+    def delete(self, request, id):
+        diary = self.get_object(id)
         diary.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
