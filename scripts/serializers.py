@@ -5,7 +5,13 @@ from .models import Script
 class ScriptSerializer(ModelSerializer):
     class Meta:
         model = Script
-        fields = ("pk",)
+        fields = (
+            "title",
+            "hashtag",
+            "contents",
+            "level",
+            "learningDate",
+        )
 
 
 class ScriptDetailSerializer(ModelSerializer):
