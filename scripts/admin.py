@@ -14,3 +14,8 @@ class ScriptAdmin(admin.ModelAdmin):
 
     def hashtag_list(self):
         return Script.hashtag
+
+
+@admin.register
+class TagAdmin(admin.ModelAdmin):
+    pass
