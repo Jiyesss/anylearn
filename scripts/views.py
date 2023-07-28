@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
 from .models import Script
-from .serializers import ScriptSerializer
+from .serializers import ScriptSerializer, ScriptDetailSerializer
 
 
 # Create your views here.
@@ -13,4 +14,17 @@ class Scripts(APIView):
             all_scripts,
             many=True,
         )
+        return Response(serializer.data)
+
+
+class ScriptDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Script.objects.get(pk=pk)
+        except Script.DoesNotExist:
+            raise NotFound
+
+    def get(self, request, pk):
+        script = self.get_object(pk)
+        serializer = ScriptDetailSerializer(script)
         return Response(serializer.data)
