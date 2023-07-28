@@ -6,7 +6,7 @@ from .models import Script
 from .serializers import ScriptSerializer, ScriptDetailSerializer
 
 
-# Create your views here.
+# /api/v1/scripts url에 접근했을 때 API
 class Scripts(APIView):
     def get(self, requet):
         all_scripts = Script.objects.all()
@@ -17,6 +17,7 @@ class Scripts(APIView):
         return Response(serializer.data)
 
 
+# /api/v1/scripts/[pk] url에 접근했을 때 API
 class ScriptDetail(APIView):
     def get_object(self, pk):
         try:
