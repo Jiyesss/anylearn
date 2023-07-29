@@ -33,17 +33,26 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+THIRD_PARTY_APPS = [
+    "rest_framework",
+]
 
-INSTALLED_APPS = [
+CUSTOM_APPS = [
+    "users.apps.UsersConfig",
+    "scripts.apps.ScriptsConfig",
+    "diaries.apps.DiariesConfig",
+]
+
+SYSTEM_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "users.apps.UsersConfig",
-    "scripts.apps.ScriptsConfig",
 ]
+
+INSTALLED_APPS = THIRD_PARTY_APPS + SYSTEM_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -127,6 +136,14 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+<<<<<<< HEAD
 =======
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 >>>>>>> b79f81c1151332387e838b898897d28942f37548
+=======
+
+# Auth
+AUTH_USER_MODEL = "users.User"
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
+>>>>>>> 79b21431253c6a033195f9e6371243fffc7a07c5

@@ -16,6 +16,7 @@ class Script(models.Model):
 
     title = models.CharField(
         max_length=200,
+        primary_key=True,
     )
     hashtag = models.ManyToManyField(Tag)
     contents = models.TextField()
