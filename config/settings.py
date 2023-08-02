@@ -54,6 +54,7 @@ SYSTEM_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "channels",
 ]
 
 INSTALLED_APPS = THIRD_PARTY_APPS + SYSTEM_APPS + CUSTOM_APPS
@@ -87,7 +88,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
-
+ASGI_APPLICATION = "mysite.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -149,3 +150,10 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
 
 # OpenAI API Key
 OPENAI_API_KEY = env.str("OPENAI_API_KEY")
+
+# To use Django Channels
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # 데모용 설정, 배포 환경에서는 다른 백엔드 사용을 고려
+    },
+}
