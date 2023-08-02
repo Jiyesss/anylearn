@@ -10,11 +10,18 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from environ import Env
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = Env()
+# .env 경로에 파일이 존재한다면, 환경변수로서 읽기
+env_path: Path = BASE_DIR / ".env"
+if env_path.is_file():
+    with env_path.open("rt", encoding="utf-8") as f:
+        env.read_env(f, overwrite=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -163,6 +170,7 @@ CUSTOM_APPS = [
     "users.apps.UsersConfig",
     "scripts.apps.ScriptsConfig",
     "diaries.apps.DiariesConfig",
+    "chats.apps.ChatsConfig",
 ]
 
 SYSTEM_APPS = [
@@ -240,7 +248,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+# 디폴트 안내 메세지의 언어
+LANGUAGE_CODE = env.str("LANGUAGE_CODE", default="en-us")
 
 TIME_ZONE = "Asia/Seoul"
 
@@ -263,3 +272,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
+
+# OpenAI API Key
+OPENAI_API_KEY = env.str("OPENAI_API_KEY")
