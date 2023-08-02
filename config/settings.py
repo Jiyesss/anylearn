@@ -44,6 +44,7 @@ CUSTOM_APPS = [
     "users.apps.UsersConfig",
     "scripts.apps.ScriptsConfig",
     "diaries.apps.DiariesConfig",
+    "chats.apps.ChatsConfig",
 ]
 
 SYSTEM_APPS = [
