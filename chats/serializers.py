@@ -39,6 +39,7 @@ class RolePlayingRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = RolePlayingRoom
         fields = [
+            "id",
             "level",
             "situation",
             "situation_en",
