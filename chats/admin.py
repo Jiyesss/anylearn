@@ -1,3 +1,13 @@
 from django.contrib import admin
+from .models import RolePlayingRoom
 
-# Register your models here.
+
+@admin.register(RolePlayingRoom)
+class ChatAdmin(admin.ModelAdmin):
+    list_display = [
+        "user",
+        "level",
+        "situation",
+        "my_role",
+        "gpt_role",
+    ]
