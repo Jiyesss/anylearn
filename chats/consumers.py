@@ -5,7 +5,7 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from pprint import pprint
 from typing import List
 from django.contrib.auth.models import AbstractUser
-from chat.models import RolePlayingRoom, GptMessage
+from chats.models import RolePlayingRoom, GptMessage
 import openai
 
 
