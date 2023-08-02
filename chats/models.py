@@ -21,7 +21,11 @@ class RolePlayingRoom(models.Model):
         ordering = ["-pk"]
 
     # user 필드를 외래키로 지정
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="chats",
+    )
     # level 필드(1,2,3)-> 선택지
     level = models.SmallIntegerField(
         choices=Level.choices, default=Level.BEGINNER, verbose_name="레벨"
