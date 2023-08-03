@@ -16,7 +16,11 @@ class DiaryDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Diary
-        fields = "__all__"
+        fields = (
+            "user_email",
+            "comment",
+            "diaryContents",
+        )
         depth = 1
 
 
