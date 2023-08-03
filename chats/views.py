@@ -12,7 +12,7 @@ from .serializers import ChatSerializer, ChatDetailSerializer, RolePlayingRoomSe
 from gtts import gTTS
 
 
-# /api/v1/diaries url에 접근했을 때 API
+# /api/v1/chats url에 접근했을 때 API
 class Chats(APIView):
     def get(self, requet):
         all_chats = RolePlayingRoom.objects.all()

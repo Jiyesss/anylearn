@@ -24,6 +24,8 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         else:
             self.accept()
 
+            # room_pk값
+            room_pk = self.scope["url_route"]["kwargs"]["room_pk"]
             # user의 초기 설정
             self.gpt_messages = room.get_initial_messages()
             # gpt의 추천 표현
