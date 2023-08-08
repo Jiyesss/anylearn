@@ -164,6 +164,7 @@ ALLOWED_HOSTS = []
 # Application definition
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 CUSTOM_APPS = [
@@ -193,6 +194,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 ROOT_URLCONF = "config.urls"
 
