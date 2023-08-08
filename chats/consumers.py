@@ -19,8 +19,6 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
     # 웹소켓 접속 유저가 원하는 채팅방과 연결(connect)
     def connect(self):
-        # 출력하여 딕셔너리 내용 확인
-        pprint(self.scope["url_route"]["kwargs"])
         room = self.get_room()
         if room is None:
             self.close()

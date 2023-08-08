@@ -18,6 +18,9 @@ python = "^3.11"
 django = "^4.2.4"
 gitignore = "^0.0.8"
 djangorestframework = "^3.14.0"
+websocket-client = "^1.6.1"
+websockets = "^11.0.3"
+twisted = {extras = ["http2", "tls"], version = "^22.10.0"}
 
 
 [build-system]
