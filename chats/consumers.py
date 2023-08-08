@@ -15,6 +15,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         super().__init__(*args, **kwargs)
         self.gpt_messages: List[GptMessage] = []
         self.recommend_message: str = ""
+        self.room_pk = None
 
     # 웹소켓 접속 유저가 원하는 채팅방과 연결(connect)
     def connect(self):

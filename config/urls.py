@@ -23,5 +23,4 @@ urlpatterns = [
     path("api/v1/diaries/", include("diaries.urls")),
     path("api/v1/chats/", include("chats.urls")),
     path("api/v1/users/", include("users.urls")),
-
 ]
