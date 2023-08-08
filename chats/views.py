@@ -31,11 +31,6 @@ class Chats(APIView):
             return Response(serializer.errors)
 
 
-class RolePlayingRoomCreateView(generics.CreateAPIView):
-    queryset = RolePlayingRoom.objects.all()
-    serializer_class = RolePlayingRoomSerializer
-
-
 # /api/v1/chats/[pk] url에 접근했을 때 API
 class ChatDetail(APIView):
     def get_object(self, pk):
