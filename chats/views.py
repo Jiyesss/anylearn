@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 # /api/v1/chats url에 접근했을 때 API
 class Chats(APIView):
-    def get(self, requet):
+    def get(self, request):
         all_chats = RolePlayingRoom.objects.all()
         serializer = RolePlayingRoomSerializer(
             all_chats,
@@ -54,6 +54,7 @@ class ChatDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# 기존에 추가했던 TTS 기능
 @staff_member_required
 def make_voice(request):
     lang = request.GET.get("lang", "en")
