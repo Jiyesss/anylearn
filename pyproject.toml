@@ -21,6 +21,7 @@ djangorestframework = "^3.14.0"
 websocket-client = "^1.6.1"
 websockets = "^11.0.3"
 twisted = {extras = ["http2", "tls"], version = "^22.10.0"}
+google-cloud-texttospeech = "^2.14.1"
 
 
 [build-system]
