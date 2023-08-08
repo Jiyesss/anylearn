@@ -15,7 +15,7 @@ beautifulsoup4 = "*"
 channels = { version = "~4.0.0", extras = ["daphne"] }
 gTTS = "2.3.2"
 python = "^3.11"
-django = "^4.2.3"
+django = "^4.2.4"
 gitignore = "^0.0.8"
 djangorestframework = "^3.14.0"
 
