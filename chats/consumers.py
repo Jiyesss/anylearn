@@ -18,6 +18,8 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
     # 웹소켓 접속 유저가 원하는 채팅방과 연결(connect)
     def connect(self):
+        # 출력하여 딕셔너리 내용 확인
+        pprint(self.scope["url_route"]["kwargs"])
         room = self.get_room()
         if room is None:
             self.close()
@@ -70,7 +72,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             )
 
     # user의 채팅방 조회
-    def get_room(self) -> RolePlayingRoom | None:
+    def get_room(self, **kwargs) -> RolePlayingRoom | None:
         user: AbstractUser = self.scope["user"]
         room_pk = self.scope["url_route"]["kwargs"]["room_pk"]
         room: RolePlayingRoom = None
