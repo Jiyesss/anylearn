@@ -62,6 +62,7 @@ def synthesize_text(text):
 # [START tts_synthesize_ssml]
 def synthesize_ssml(ssml):
     """Synthesizes speech from the input string of ssml.
+    *ssml =speech synthesize markup language
 
     Note: ssml must be well-formed according to:
         https://www.w3.org/TR/speech-synthesis/
