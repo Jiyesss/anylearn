@@ -36,12 +36,12 @@ def run_quickstart():
     client = texttospeech.TextToSpeechClient()
 
     # Set the text input to be synthesized
-    synthesis_input = texttospeech.SynthesisInput(text="This is AnyLearn!")
+    synthesis_input = texttospeech.SynthesisInput(text="안녕하세요. 위런입니다.")
 
     # Build the voice request, select the language code ("en-US") and the ssml
     # voice gender ("neutral")
     voice = texttospeech.VoiceSelectionParams(
-        language_code="en-US", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+        language_code="ko-KR", ssml_gender=texttospeech.SsmlVoiceGender.FEMALE
     )
 
     # Select the type of audio file you want returned
@@ -56,7 +56,7 @@ def run_quickstart():
     )
 
     # The response's audio_content is binary.
-    with open("output.mp3", "wb") as out:
+    with open("output2.mp3", "wb") as out:
         # Write the response to the output file.
         out.write(response.audio_content)
         print('Audio content written to file "output.mp3"')
