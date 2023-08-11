@@ -52,16 +52,3 @@ class ChatDetail(APIView):
         chat = self.get_object(pk)
         chat.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# 기존에 추가했던 TTS 기능
-@staff_member_required
-def make_voice(request):
-    lang = request.GET.get("lang", "en")
-    message = request.GET.get("message")
-
-    response = Response()
-    gTTS(message, lang=lang).write_to_fp(response)
-    response["Content-Type"] = "audio/mpeg"
-
-    return response
