@@ -25,6 +25,7 @@ def google_translate(
     return translation["translatedText"]
 
 
+"""
 if __name__ == "__main__":
     text = "안녕하세요. 좋은 하루 보내세요."
     source_lang = "ko"
@@ -32,3 +33,4 @@ if __name__ == "__main__":
 
     translated_text = google_translate(text, source_lang, target_lang)
     print("Translated text:", translated_text)
+"""
