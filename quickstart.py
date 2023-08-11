@@ -35,8 +35,11 @@ def run_quickstart():
     # Instantiates a client
     client = texttospeech.TextToSpeechClient()
 
+    # To use for input sentence
+    sentence = input("말하고 싶은 텍스트 입력: ")
+
     # Set the text input to be synthesized
-    synthesis_input = texttospeech.SynthesisInput(text="안녕하세요. 위런입니다.")
+    synthesis_input = texttospeech.SynthesisInput(text=sentence)
 
     # Build the voice request, select the language code ("en-US") and the ssml
     # voice gender ("neutral")
@@ -55,11 +58,14 @@ def run_quickstart():
         input=synthesis_input, voice=voice, audio_config=audio_config
     )
 
+    # save the mp3 name
+    OUTPUT = input("저장할 이름과 확장자를 입력하세요: ")
+
     # The response's audio_content is binary.
-    with open("output2.mp3", "wb") as out:
+    with open(OUTPUT, "wb") as out:
         # Write the response to the output file.
         out.write(response.audio_content)
-        print('Audio content written to file "output.mp3"')
+        print(f'Audio content written to file "{OUTPUT}"')
     # [END tts_quickstart]
 
 
