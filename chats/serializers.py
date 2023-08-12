@@ -69,7 +69,7 @@ class RolePlayingRoomSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def _translate(origin_text: str) -> str:
-        translated = google_translate(origin_text, "auto", "en")
+        translated = google_translate(origin_text, "ko", "en")
         if not translated:
             raise serializers.ValidationError("구글 번역에 실패했습니다.")
         return translated
