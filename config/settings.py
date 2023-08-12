@@ -181,6 +181,11 @@ SYSTEM_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+<<<<<<< HEAD
+=======
+    "channels",
+    "corsheaders",
+>>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
@@ -193,6 +198,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 CHANNEL_LAYERS = {
@@ -282,3 +288,18 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
 
 # OpenAI API Key
 OPENAI_API_KEY = env.str("OPENAI_API_KEY")
+<<<<<<< HEAD
+=======
+
+# To use Django Channels
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # 데모용 설정, 배포 환경에서는 다른 백엔드 사용을 고려
+    },
+}
+
+CORS_ALLOWED_ORIGINS = [
+    # "http://frontend.com",
+    # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
+]
+>>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
