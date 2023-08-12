@@ -56,6 +56,7 @@ SYSTEM_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "channels",
+    "corsheaders",
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 CHANNEL_LAYERS = {
@@ -164,3 +166,8 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",  # 데모용 설정, 배포 환경에서는 다른 백엔드 사용을 고려
     },
 }
+
+CORS_ALLOWED_ORIGINS = [
+    # "http://frontend.com",
+    # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
+]
