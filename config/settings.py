@@ -32,6 +32,7 @@ SECRET_KEY = "django-insecure-@5q1u($b^0#-gywryihv7_8s7ewcwal+e0&a5g%8gy=%lh5n-!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['*','35.236.157.81','localhost','127.0.0.1']
 
 
@@ -159,6 +160,14 @@ SECRET_KEY = "django-insecure-@5q1u($b^0#-gywryihv7_8s7ewcwal+e0&a5g%8gy=%lh5n-!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+=======
+# 호스트의 요청을 받기 위해 호스트 등록하기
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "31cb-110-11-211-50.ngrok-free.app",
+]
+>>>>>>> 05d2b43 (websocket 연결 환경설정중)
 
 
 # Application definition
@@ -298,8 +307,12 @@ CHANNEL_LAYERS = {
     },
 }
 
+CORS_ALLOW_WEBSOCKETS = True  # 웹소켓에 대한 CORS 허용 설정
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://192.168.88.1:8000",
+    "https://31cb-110-11-211-50.ngrok-free.app",
+    "ws://31cb-110-11-211-50.ngrok-free.app",
     # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
 ]
 >>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
