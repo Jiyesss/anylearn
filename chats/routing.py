@@ -5,5 +5,8 @@ from . import consumers
 
 websocket_urlpatterns = [
     path("ws/chats/<int:room_pk>", consumers.RolePlayingRoomConsumer.as_asgi()),
+<<<<<<< HEAD
     path("ws/connect_path/", consumers.MyConsumer.as_asgi()),
+=======
+>>>>>>> 511da81 (websocket연결중_ path변경 및 cors추가)
 ]

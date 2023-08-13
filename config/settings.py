@@ -299,7 +299,7 @@ CHANNEL_LAYERS = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    # "http://frontend.com",
+    "http://192.168.88.1:8000",
     # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
 ]
 >>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
