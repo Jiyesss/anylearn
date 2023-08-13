@@ -168,6 +168,6 @@ CHANNEL_LAYERS = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    # "http://frontend.com",
+    "http://192.168.88.1:8000",
     # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
 ]
