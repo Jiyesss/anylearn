@@ -16,6 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from chats import consumers
+
+websocket_urlpatterns = [
+    path("ws/chats/<int:room_pk>/", consumers.RolePlayingRoomConsumer.as_asgi()),
+]
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -23,5 +28,4 @@ urlpatterns = [
     path("api/v1/diaries/", include("diaries.urls")),
     path("api/v1/chats/", include("chats.urls")),
     path("api/v1/users/", include("users.urls")),
-
-]
+] + websocket_urlpatterns
