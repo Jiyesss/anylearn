@@ -188,6 +188,11 @@ CUSTOM_APPS = [
 ]
 
 SYSTEM_APPS = [
+<<<<<<< HEAD
+=======
+    "daphne",
+    "corsheaders",
+>>>>>>> 7ddcc85 (pull main)
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -197,8 +202,11 @@ SYSTEM_APPS = [
 <<<<<<< HEAD
 =======
     "channels",
+<<<<<<< HEAD
     "corsheaders",
 >>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
+=======
+>>>>>>> 7ddcc85 (pull main)
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
