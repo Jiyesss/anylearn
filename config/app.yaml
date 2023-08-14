@@ -1,0 +1,19 @@
+runtime: python311  # 사용할 Python 버전
+
+instance_class: F2  # 인스턴스 유형 설정
+
+automatic_scaling:
+  target_cpu_utilization: 0.65  # 자동 확장 설정
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: "config.settings"  # Django 설정 모듈 경로
+
+entrypoint: gunicorn -b :$PORT config.wsgi  # Gunicorn으로 Django 실행
+
+handlers:
+- url: /static
+  static_dir: static/  # 정적 파일 경로
+
+- url: /.*
+  script: auto  # 나머지 URL은 자동 처리
+

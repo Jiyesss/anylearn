@@ -34,15 +34,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
 # Application definition
 
-CUSTOM_APPS = [
-    "users.apps.UsersConfig",
-    "scripts.apps.ScriptsConfig",
-    "diaries.apps.DiariesConfig",
-]
-
-SYSTEM_APPS = [
+INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -82,7 +77,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
-ASGI_APPLICATION = "config.asgi.application"
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -148,18 +143,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from environ import Env
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = Env()
-# .env 경로에 파일이 존재한다면, 환경변수로서 읽기
-env_path: Path = BASE_DIR / ".env"
-if env_path.is_file():
-    with env_path.open("rt", encoding="utf-8") as f:
-        env.read_env(f, overwrite=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -171,6 +159,7 @@ SECRET_KEY = "django-insecure-@5q1u($b^0#-gywryihv7_8s7ewcwal+e0&a5g%8gy=%lh5n-!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
 
 # Application definition
 THIRD_PARTY_APPS = [
@@ -191,7 +180,6 @@ SYSTEM_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "channels",
 ]
 
 INSTALLED_APPS = THIRD_PARTY_APPS + SYSTEM_APPS + CUSTOM_APPS
@@ -225,7 +213,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
-ASGI_APPLICATION = "config.asgi.application"
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -287,10 +275,3 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
 
 # OpenAI API Key
 OPENAI_API_KEY = env.str("OPENAI_API_KEY")
-
-# To use Django Channels
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",  # 데모용 설정, 배포 환경에서는 다른 백엔드 사용을 고려
-    },
-}
