@@ -30,7 +30,7 @@ if env_path.is_file():
 SECRET_KEY = "django-insecure-@5q1u($b^0#-gywryihv7_8s7ewcwal+e0&a5g%8gy=%lh5n-!"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 <<<<<<< HEAD
 ALLOWED_HOSTS = ['*','35.236.157.81','localhost','127.0.0.1']
@@ -162,6 +162,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 =======
 # 호스트의 요청을 받기 위해 호스트 등록하기
+<<<<<<< HEAD
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
@@ -169,6 +170,9 @@ ALLOWED_HOSTS = [
 ]
 >>>>>>> 05d2b43 (websocket 연결 환경설정중)
 
+=======
+ALLOWED_HOSTS = ["35.236.157.81"]
+>>>>>>> f87853a (server open시도)
 
 # Application definition
 THIRD_PARTY_APPS = [
@@ -200,6 +204,7 @@ SYSTEM_APPS = [
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -207,7 +212,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
 ]
 
 CHANNEL_LAYERS = {
@@ -283,7 +287,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -308,11 +312,12 @@ CHANNEL_LAYERS = {
 }
 
 CORS_ALLOW_WEBSOCKETS = True  # 웹소켓에 대한 CORS 허용 설정
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://192.168.88.1:8000",
     "https://31cb-110-11-211-50.ngrok-free.app",
     "ws://31cb-110-11-211-50.ngrok-free.app",
+    "http://35.236.157.81:8000/",
     # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
 ]
 >>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
