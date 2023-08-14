@@ -13,3 +13,6 @@ class Diary(models.Model):
         on_delete=models.CASCADE,
         related_name="diaries",
     )
+
+
+#
