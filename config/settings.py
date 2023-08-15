@@ -30,7 +30,7 @@ if env_path.is_file():
 SECRET_KEY = "django-insecure-@5q1u($b^0#-gywryihv7_8s7ewcwal+e0&a5g%8gy=%lh5n-!"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # 호스트의 요청을 받기 위해 호스트 등록하기
 ALLOWED_HOSTS = ["35.236.157.81"]
