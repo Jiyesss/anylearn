@@ -7,7 +7,7 @@ automatic_scaling:
 env_variables:
   DJANGO_SETTINGS_MODULE: "config.settings"
 
-entrypoint: gunicorn -b :$PORT config.wsgi
+entrypoint: gunicorn config.wsgi:application
 
 handlers:
 - url: /static
