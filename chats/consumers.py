@@ -7,6 +7,7 @@ from typing import List
 from django.contrib.auth.models import AbstractUser
 from chats.models import RolePlayingRoom, GptMessage
 import openai
+import json
 
 
 # 상속받은 클래스에 기본 기능 구현되어 있음
@@ -107,3 +108,26 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.gpt_messages.append(gpt_message)
 
         return response_content
+
+
+class MyConsumer(JsonWebsocketConsumer):
+    def connect(self):
+        self.send_json(
+            {
+                "type": "connect-message",
+                "message": "connect successd",
+            }
+        )
+
+    def disconnect(self, close_code):
+        pass
+
+    def receive_json(self, text_data):
+        received_data = json.loads(text_data)
+        message = received_data["message"]
+        self.send_json(
+            {
+                "type": "text",
+                "message": message,
+            }
+        )
