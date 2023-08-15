@@ -330,10 +330,7 @@ CORS_ALLOW_WEBSOCKETS = True  # 웹소켓에 대한 CORS 허용 설정
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://192.168.88.1:8000",
-    "https://31cb-110-11-211-50.ngrok-free.app",
-    "ws://31cb-110-11-211-50.ngrok-free.app",
-    "http://35.236.157.81:8000/",
-    "https://hf151-395305.df.r.appspot.com/",
+    "https://hf151-395305.df.r.appspot.com",
     # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
 ]
 >>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
