@@ -33,7 +33,10 @@ SECRET_KEY = "django-insecure-@5q1u($b^0#-gywryihv7_8s7ewcwal+e0&a5g%8gy=%lh5n-!
 DEBUG = True
 
 # 호스트의 요청을 받기 위해 호스트 등록하기
-ALLOWED_HOSTS = ["35.236.157.81"]
+ALLOWED_HOSTS = [
+    "35.236.157.81",
+    "hf151-395305.df.r.appspot.com",
+]
 
 # Application definition
 THIRD_PARTY_APPS = [
@@ -175,5 +178,6 @@ CORS_ALLOWED_ORIGINS = [
     "https://31cb-110-11-211-50.ngrok-free.app",
     "ws://31cb-110-11-211-50.ngrok-free.app",
     "http://35.236.157.81:8000/",
+    "https://hf151-395305.df.r.appspot.com/",
     # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
 ]
