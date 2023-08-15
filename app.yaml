@@ -2,7 +2,7 @@
 runtime: python311
 
 # websocket 사용을 위한 App Engine 의 FLEX 환경 사용 
-env: flex
+#env: flex -> python version 3.7까지만 지원됨.
 
 # CPU 성능이 좀 더 높은 F2 인스턴스 클래스 선택
 instance_class: F2
@@ -23,8 +23,8 @@ env_variables:
   # DJANGO_SETTINGS_MODULE 환경 변수 설정
   DJANGO_SETTINGS_MODULE: "config.settings"
 
-# 애플리케이션 진입점 설정 (gunicorn + uvicorn 워커로 실행)
-entrypoint: gunicorn config.wsgi:application -k uvicorn.workers.UvicornWorker --timeout 300
+# 애플리케이션 진입점 설정 (gunicorn 워커로 실행)
+entrypoint: gunicorn config.wsgi:application
 
 # URL 핸들러 구성
 handlers:
