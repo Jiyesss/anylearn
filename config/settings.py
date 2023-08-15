@@ -163,6 +163,7 @@ ALLOWED_HOSTS = []
 =======
 # 호스트의 요청을 받기 위해 호스트 등록하기
 <<<<<<< HEAD
+<<<<<<< HEAD
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
@@ -173,6 +174,12 @@ ALLOWED_HOSTS = [
 =======
 ALLOWED_HOSTS = ["35.236.157.81"]
 >>>>>>> f87853a (server open시도)
+=======
+ALLOWED_HOSTS = [
+    "35.236.157.81",
+    "hf151-395305.df.r.appspot.com",
+]
+>>>>>>> 26a4ccb (ALLOWES_HOSTS추가)
 
 # Application definition
 THIRD_PARTY_APPS = [
@@ -326,6 +333,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://31cb-110-11-211-50.ngrok-free.app",
     "ws://31cb-110-11-211-50.ngrok-free.app",
     "http://35.236.157.81:8000/",
+    "https://hf151-395305.df.r.appspot.com/",
     # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
 ]
 >>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
