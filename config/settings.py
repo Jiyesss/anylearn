@@ -216,6 +216,7 @@ SYSTEM_APPS = [
     "channels",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "corsheaders",
 >>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
 =======
@@ -223,6 +224,8 @@ SYSTEM_APPS = [
 =======
     "imageapp",
 >>>>>>> 5230c23 (db연결 코드 settings.py)
+=======
+>>>>>>> 22586fc (settings.py 수정)
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
