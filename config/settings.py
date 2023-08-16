@@ -59,7 +59,6 @@ SYSTEM_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "channels",
-    "imageapp",
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
