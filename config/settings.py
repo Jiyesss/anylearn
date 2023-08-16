@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from environ import Env
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,10 +34,7 @@ SECRET_KEY = "django-insecure-@5q1u($b^0#-gywryihv7_8s7ewcwal+e0&a5g%8gy=%lh5n-!
 DEBUG = True
 
 # 호스트의 요청을 받기 위해 호스트 등록하기
-ALLOWED_HOSTS = [
-    "35.236.157.81",
-    "hf151-395305.df.r.appspot.com",
-]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 THIRD_PARTY_APPS = [
@@ -61,6 +59,7 @@ SYSTEM_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "channels",
+    "imageapp",
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
@@ -106,6 +105,28 @@ ASGI_APPLICATION = "config.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+if os.getenv("GAE_APPLICATOIN", None):  # 배포했을 때는 if 절 조건을 수행
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "anylearn",
+            "USER": "welearn",
+            "PASSWORD": "welearn2023",
+            "HOST": "/cloudsql/welearn",
+        }
+    }
+else:  # 개발 환경일 경우에는 else 절 조건을 수행
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "anylearn_db",
+            "USER": "welearn",
+            "PASSWORD": "welearn2023",
+            "PORT": "3306",
+            "HOST": "34.64.70.4",
+        }
+    }
+"""
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
@@ -116,6 +137,7 @@ DATABASES = {
         "PORT": "3306",
     }
 }
+"""
 
 
 # Password validation
