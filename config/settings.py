@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from environ import Env
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -164,6 +165,7 @@ ALLOWED_HOSTS = []
 # 호스트의 요청을 받기 위해 호스트 등록하기
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
@@ -180,6 +182,9 @@ ALLOWED_HOSTS = [
     "hf151-395305.df.r.appspot.com",
 ]
 >>>>>>> 26a4ccb (ALLOWES_HOSTS추가)
+=======
+ALLOWED_HOSTS = ["*"]
+>>>>>>> 5230c23 (db연결 코드 settings.py)
 
 # Application definition
 THIRD_PARTY_APPS = [
@@ -210,10 +215,14 @@ SYSTEM_APPS = [
 =======
     "channels",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "corsheaders",
 >>>>>>> ebdc443 (CORS처리 - 서로 다른 도메인 사용 불가 정책)
 =======
 >>>>>>> 7ddcc85 (pull main)
+=======
+    "imageapp",
+>>>>>>> 5230c23 (db연결 코드 settings.py)
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
@@ -259,6 +268,28 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+if os.getenv("GAE_APPLICATOIN", None):  # 배포했을 때는 if 절 조건을 수행
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "anylearn",
+            "USER": "welearn",
+            "PASSWORD": "welearn2023",
+            "HOST": "/cloudsql/welearn",
+        }
+    }
+else:  # 개발 환경일 경우에는 else 절 조건을 수행
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "anylearn_db",
+            "USER": "welearn",
+            "PASSWORD": "welearn2023",
+            "PORT": "3306",
+            "HOST": "34.64.70.4",
+        }
+    }
+"""
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
@@ -269,6 +300,7 @@ DATABASES = {
         "PORT": "3306",
     }
 }
+"""
 
 
 # Password validation
