@@ -263,9 +263,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "anylearn",  # 앞서 생성한 데이터베이스 이름으로 바꾸세요
-        "USER": "welearn",  # Cloud SQL에서 생성한 사용자 이름으로 바꾸세요
+        "USER": "root",  # Cloud SQL에서 생성한 사용자 이름으로 바꾸세요
         "PASSWORD": "welearn2023",  # Cloud SQL에서 생성한 사용자 비밀번호로 바꾸세요
-        "HOST": "/cloudsql/hf151-395305:asia-northeast3-b:welearn",  # 올바른 프로젝트 아이디, 지역 및 인스턴스 이름으로 업데이트하세요
+        "HOST": "34.64.70.4",  # 올바른 프로젝트 아이디, 지역 및 인스턴스 이름으로 업데이트하세요
         "PORT": "3306",
     }
 }
