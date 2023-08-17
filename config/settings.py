@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from environ import Env
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -141,7 +142,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 # 디폴트 안내 메세지의 언어
-LANGUAGE_CODE = env.str("LANGUAGE_CODE", default="en-us")
+LANGUAGE_CODE = env.str("LANGUAGE_CODE", default="ko")
 
 TIME_ZONE = "Asia/Seoul"
 
@@ -154,6 +155,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "/static/"
+
+# 아래 경로는 모아진 정적 파일을 저장할 디렉토리를 설정한 것입니다.
+# 필요에 따라 경로를 수정할 수 있습니다.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
