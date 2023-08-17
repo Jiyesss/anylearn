@@ -104,14 +104,14 @@ ASGI_APPLICATION = "config.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if os.getenv("GAE_APPLICATOIN", None):  # 배포했을 때는 if 절 조건을 수행
+if os.getenv("GAE_APPLICATION", None):  # 배포했을 때는 if 절 조건을 수행
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
             "NAME": "anylearn",
             "USER": "welearn",
             "PASSWORD": "welearn2023",
-            "HOST": "/cloudsql/welearn",
+            "HOST": "34.64.70.4",
         }
     }
 else:  # 개발 환경일 경우에는 else 절 조건을 수행
