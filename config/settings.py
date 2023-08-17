@@ -105,39 +105,16 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if os.getenv("GAE_APPLICATION", None):  # 배포했을 때는 if 절 조건을 수행
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": "anylearn",
-            "USER": "welearn",
-            "PASSWORD": "welearn2023",
-            "HOST": "34.64.70.4",
-        }
-    }
-else:  # 개발 환경일 경우에는 else 절 조건을 수행
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": "anylearn_db",
-            "USER": "welearn",
-            "PASSWORD": "welearn2023",
-            "PORT": "3306",
-            "HOST": "34.64.70.4",
-        }
-    }
-"""
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "anylearn",  # 앞서 생성한 데이터베이스 이름으로 바꾸세요
-        "USER": "root",  # Cloud SQL에서 생성한 사용자 이름으로 바꾸세요
-        "PASSWORD": "welearn2023",  # Cloud SQL에서 생성한 사용자 비밀번호로 바꾸세요
-        "HOST": "34.64.70.4",  # 올바른 프로젝트 아이디, 지역 및 인스턴스 이름으로 업데이트하세요
+        "NAME": "anylearn_db",
+        "USER": "welearn",
+        "PASSWORD": "welearn2023",
         "PORT": "3306",
+        "HOST": "34.64.70.4",
     }
 }
-"""
 
 
 # Password validation
