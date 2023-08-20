@@ -611,6 +611,17 @@ django = ">=3.0"
 pytz = "*"
 
 [[package]]
+name = "djangorestframework-api-key"
+version = "2.3.0"
+description = "API key permissions for the Django REST Framework"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "djangorestframework-api-key-2.3.0.tar.gz", hash = "sha256:c2fa61280069acd8dc0e9dd1840e0e1934a2a85631069326f4d1e3a91ca9aa9a"},
+    {file = "djangorestframework_api_key-2.3.0-py3-none-any.whl", hash = "sha256:eed94f383e96ca8f9f9e4182406fe28b5585629d0039f65cbb7e6e254778f674"},
+]
+
+[[package]]
 name = "docopt"
 version = "0.6.2"
 description = "Pythonic argument parser, that will make you smile"
@@ -1781,4 +1792,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "eef17cb64646295a195c5727fa47d27827d5717d31e9a9507f66671129e7fa29"
+content-hash = "9be94b9ad0ebdfa5d5c109b50430e9f8dbd28555d4ab58f16f01f4cb3003aaf8"
