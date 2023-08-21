@@ -181,3 +181,14 @@ CORS_ALLOWED_ORIGINS = [
     "https://hf151-395305.df.r.appspot.com",
     # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
 ]
+
+REST_FRAMEWORK = {
+    # restframework가 user를 찾는 방법이 들어있는 list
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ]
+}
+
+AUTHENTICATION_BACKENDS = [
+    "users.backend.EmailBackend",
+]
