@@ -6,9 +6,17 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import ParseError, NotFound
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import parsers, renderers
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.compat import coreapi, coreschema
+from rest_framework.response import Response
+from rest_framework.schemas import ManualSchema
+from rest_framework.schemas import coreapi as coreapi_schema
+from rest_framework.views import APIView
 from users.models import User
 from . import serializers
-from .serializers import UserRegistrationSerializer
+from .serializers import UserRegistrationSerializer, CustomAuthTokenSerializer
 
 
 class Me(APIView):
@@ -128,3 +136,13 @@ class UserRegistrationView(generics.CreateAPIView):
             )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# 토큰인증로그인
+class CustomObtainAuthToken(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = CustomAuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({"token": token.key})
