@@ -35,26 +35,3 @@ class PrivateUserSerializer(ModelSerializer):
         )
 =======
         )
-
-
-class CustomAuthTokenSerializer(serializers.Serializer):
-    email = serializers.EmailField(write_only=True)
-    password = serializers.CharField(style={"input_type": "password"}, write_only=True)
-
-    def validate(self, attrs):
-        email = attrs.get("email")
-        password = attrs.get("password")
-
-        if email and password:
-            user = authenticate(
-                request=self.context.get("request"), email=email, password=password
-            )
-
-            if user:
-                attrs["user"] = user
-            else:
-                raise serializers.ValidationError("이메일 혹은 비밀번호가 잘못되었습니다.")
-        else:
-            raise serializers.ValidationError("이메일과 비밀번호를 입력해주세요.")
-        return attrs
->>>>>>> ef71a62 (토큰 인증 로그인 방법)

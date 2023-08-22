@@ -136,13 +136,3 @@ class UserRegistrationView(generics.CreateAPIView):
             )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# 토큰인증로그인
-class CustomObtainAuthToken(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = CustomAuthTokenSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["user"]
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key})
