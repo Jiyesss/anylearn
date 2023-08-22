@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from .models import User
 
 # 회원가입 기능 구현을 위한 serializer
