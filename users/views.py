@@ -6,17 +6,9 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import ParseError, NotFound
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import parsers, renderers
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.compat import coreapi, coreschema
-from rest_framework.response import Response
-from rest_framework.schemas import ManualSchema
-from rest_framework.schemas import coreapi as coreapi_schema
-from rest_framework.views import APIView
 from users.models import User
 from . import serializers
-from .serializers import UserRegistrationSerializer, CustomAuthTokenSerializer
+from .serializers import UserRegistrationSerializer
 
 
 class Me(APIView):
