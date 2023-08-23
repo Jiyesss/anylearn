@@ -12,10 +12,7 @@ class TinyEmailSerializer(ModelSerializer):
 class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
-        fields = (
-            "id",
-            "tag",
-        )
+        fields = ["tag"]
 
 
 # put요청할 때, 두가지 필드만 입력받기 위한 serializer

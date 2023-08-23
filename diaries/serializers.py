@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from scripts.serializers import TinyEmailSerializer
+from scripts.serializers import TinyEmailSerializer, ScriptTinySerializer
 from .models import Diary
 
 
@@ -13,6 +13,7 @@ class DiarySerializer(ModelSerializer):
 # datil diary를 보기 위한 serializer
 class DiaryDetailSerializer(ModelSerializer):
     user_email = TinyEmailSerializer()
+    diaryContents = ScriptTinySerializer(many=True)
 
     class Meta:
         model = Diary
