@@ -7,7 +7,7 @@ from typing import List
 from django.contrib.auth.models import AbstractUser
 from chats.models import RolePlayingRoom, GptMessage
 import openai
-import json
+from scripts.models import Script
 
 
 # 상속받은 클래스에 기본 기능 구현되어 있음
@@ -63,6 +63,20 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     "message": recommended_message,
                 }
             )
+        elif content_dict["type"] == "end-conversation":
+            # 채팅 내역 저장
+            room = self.get_room()
+            if room:
+                for gpt_message in self.gpt_messages:
+                    message = Script(contents=gpt_message.content)
+                    message.save()
+
+            # 변수 초기화
+            self.gpt_messages.clear()
+            self.recommend_message = ""
+
+            # 웹소켓 연결 종료
+            self.close()
         else:
             self.send_json(
                 {

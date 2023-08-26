@@ -19,12 +19,7 @@ class Script(models.Model):
         primary_key=True,
     )
     hashtag = models.ManyToManyField(Tag)
-    contents = models.ForeignKey(
-        "chats.RolePlayingRoom",
-        on_delete=models.SET_NULL,
-        related_name="scripts",
-        null=True,
-    )
+    contents = models.TextField(null=True)
     level = models.CharField(
         max_length=10,
         choices=LevelChoices.choices,
