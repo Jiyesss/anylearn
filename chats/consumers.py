@@ -87,7 +87,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                 # Script 객체 생성 (DB에 저장)
                 script = Script.objects.create(
                     title=title,
-                    level=Script.LevelChoices.LEVEL1,
+                    level=self.room_level,
                     learningDate=timezone.now(),  # 현재 날짜 사용
                     email=self.scope["user"],
                     contents=message,
