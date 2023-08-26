@@ -12,10 +12,7 @@ class TinyEmailSerializer(ModelSerializer):
 class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
-        fields = (
-            "id",
-            "tag",
-        )
+        fields = ["tag"]
 
 
 # put요청할 때, 두가지 필드만 입력받기 위한 serializer
@@ -27,25 +24,19 @@ class ScriptTinySerializer(ModelSerializer):
         fields = ("hashtag", "contents")
 
     def update(self, instance, validated_data):
+        # hashtag 데이터 추출 후 삭제
         hashtag_data = validated_data.pop("hashtag", [])
 
-        # Update the associated tags for the script
-        for tag_data in hashtag_data:
-            tag_id = tag_data.get("id", None)
-            tag_tag = tag_data.get("tag", None)
-
-            if tag_id and tag_tag:
-                try:
-                    tag = Tag.objects.get(pk=tag_id)
-                    tag.tag = tag_tag
-                    tag.save()
-                except Tag.DoesNotExist:
-                    # If the tag with the given ID doesn't exist, you can handle it here
-                    pass
-        instance.contents = validated_data.get("contents", instance.contents)
         # Update other fields as needed...
-
+        instance.contents = validated_data.get("contents", instance.contents)
         instance.save()
+
+        # Update the associated tags for the script
+        instance.hashtag.clear()
+        for tag_data in hashtag_data:
+            tag, created = Tag.objects.get_or_create(tag=tag_data["tag"])
+            instance.hashtag.add(tag)
+
         return instance
 
 
