@@ -34,7 +34,10 @@ SECRET_KEY = "django-insecure-@5q1u($b^0#-gywryihv7_8s7ewcwal+e0&a5g%8gy=%lh5n-!
 DEBUG = True
 
 # 호스트의 요청을 받기 위해 호스트 등록하기
-ALLOWED_HOSTS = ["*", "35.234.62.122"]
+ALLOWED_HOSTS = [
+    "*",
+    # "35.234.62.122"
+]
 
 # Application definition
 THIRD_PARTY_APPS = [

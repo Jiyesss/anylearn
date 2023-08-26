@@ -112,6 +112,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
 class MyConsumer(JsonWebsocketConsumer):
     def connect(self):
+        self.accept()
         self.send_json(
             {
                 "type": "connect-message",
@@ -123,8 +124,7 @@ class MyConsumer(JsonWebsocketConsumer):
         pass
 
     def receive_json(self, text_data):
-        received_data = json.loads(text_data)
-        message = received_data["message"]
+        message = text_data["message"]
         self.send_json(
             {
                 "type": "text",
