@@ -80,6 +80,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     level=Script.LevelChoices.LEVEL1,
                     learningDate=timezone.now(),  # 현재 날짜 사용
                     email=self.scope["user"],
+                    contents=message,
                 )
 
                 # 해시태그 입력 받기
