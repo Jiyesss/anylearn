@@ -19,7 +19,7 @@ class Script(models.Model):
         primary_key=True,
     )
     hashtag = models.ManyToManyField(Tag)
-    contents = models.TextField()
+    contents = models.TextField(null=True)
     level = models.CharField(
         max_length=10,
         choices=LevelChoices.choices,
