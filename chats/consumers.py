@@ -7,7 +7,8 @@ from typing import List
 from django.contrib.auth.models import AbstractUser
 from chats.models import RolePlayingRoom, GptMessage
 import openai
-from scripts.models import Script
+from scripts.models import Script, Tag
+from django.utils import timezone
 
 
 # 상속받은 클래스에 기본 기능 구현되어 있음
@@ -67,9 +68,34 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             # 채팅 내역 저장
             room = self.get_room()
             if room:
+                message = []
                 for gpt_message in self.gpt_messages:
-                    message = Script(contents=gpt_message.content)
-                    message.save()
+                    message.append(gpt_message["content"])
+                    # message = Script(contents=gpt_message.content)
+                message = " ".join(message)
+                title = input("title: ")
+                # Script 객체 생성 (DB에 저장)
+                script = Script.objects.create(
+                    title=title,
+                    level=Script.LevelChoices.LEVEL1,
+                    learningDate=timezone.now(),  # 현재 날짜 사용
+                    email=self.scope["user"],
+                )
+
+                # 해시태그 입력 받기
+                while True:
+                    hashtag_name = input("hashtag: ")
+
+                    if hashtag_name == "":
+                        break
+
+                    # 해시태그 DB에 저장 (이미 존재한다면 가져오기)
+                    hashtag, created = Tag.objects.get_or_create(tag=hashtag_name)
+
+                    # Script와 연결
+                    script.hashtag.add(hashtag)  # add() 함수 사용
+
+                script.save()  # 변경 사항 DB에 저장
 
             # 변수 초기화
             self.gpt_messages.clear()
