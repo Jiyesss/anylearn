@@ -74,7 +74,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     "message": recommended_message,
                 }
             )
-        elif content_dict["type"] == "end-conversation":
+        elif content_dict["type"] == "end-save-conversation":
             # 채팅 내역 저장
             room = self.get_room()
             if room:
@@ -114,6 +114,16 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
             # 웹소켓 연결 종료
             self.close()
+
+        elif content_dict["type"] == "end-notsave-conversation":
+            # 채팅 내역 저장 안함
+            room = self.get_room()
+            # 변수 초기화
+            self.gpt_messages.clear()
+            self.recommend_message = ""
+            # 웹소켓 연결 종료
+            self.close()
+
         else:
             self.send_json(
                 {
