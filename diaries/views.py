@@ -18,16 +18,16 @@ class Diaries(APIView):
         return Response(serializer.data)
 
 
-# /api/v1/diaries/[pk] url에 접근했을 때 API
+# /api/v1/diaries/[NowDate] url에 접근했을 때 API
 class DiaryDetail(APIView):
-    def get_object(self, id):
+    def get_object(self, date):
         try:
-            return Diary.objects.get(id=id)
+            return Diary.objects.get(nowDate=date)
         except Diary.DoesNotExist:
             raise NotFound
 
-    def get(self, request, id):
-        diary = self.get_object(id)
+    def get(self, request, date):
+        diary = self.get_object(date)
         serializer = DiaryDetailSerializer(diary)
         return Response(serializer.data)
 

@@ -24,10 +24,11 @@ class TinyUserSerializer(ModelSerializer):
             "username",
         )
 
+
 class PrivateUserSerializer(ModelSerializer):
     class Meta:
         model = User
-		# 수정하면 안 될 부분 
+        # 수정하면 안 될 부분
         exclude = (
             "password",
             "is_superuser",

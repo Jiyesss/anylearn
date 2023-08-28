@@ -8,9 +8,16 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from chats.models import RolePlayingRoom, GptMessage
 import openai
+<<<<<<< HEAD
 from scripts.models import Script,Tag
 from django.utils import timezone
 from .serializers import RolePlayingRoomSerializer
+=======
+from scripts.models import Script, Tag
+from django.utils import timezone
+from .serializers import RolePlayingRoomSerializer
+
+>>>>>>> 78771f25d52325f1587e499096393201ef388040
 
 # 상속받은 클래스에 기본 기능 구현되어 있음
 class RolePlayingRoomConsumer(JsonWebsocketConsumer):
@@ -18,6 +25,10 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         super().__init__(*args, **kwargs)
         self.gpt_messages: List[GptMessage] = []
         self.recommend_message: str = ""
+<<<<<<< HEAD
+=======
+        self.room_pk = None
+>>>>>>> 78771f25d52325f1587e499096393201ef388040
         self.room_level = 1
 
     # 웹소켓 접속 유저가 원하는 채팅방과 연결(connect)
@@ -30,6 +41,8 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
             # room_pk값
             room_pk = self.scope["url_route"]["kwargs"]["room_pk"]
+            # user가 선택한 level
+            self.room_level = room.level
             # user의 초기 설정
             self.gpt_messages = room.get_initial_messages()
             # user의 level 설정
@@ -73,7 +86,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     "message": recommended_message,
                 }
             )
-        elif content_dict["type"] == "end-conversation":
+        elif content_dict["type"] == "end-save-conversation":
             # 채팅 내역 저장
             room = self.get_room()
             if room:
@@ -86,16 +99,15 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                 # Script 객체 생성 (DB에 저장)
                 script = Script.objects.create(
                     title=title,
-                    level=Script.LevelChoices.LEVEL1,
+                    level=self.room_level,
                     learningDate=timezone.now(),  # 현재 날짜 사용
-                    email = self.scope["user"],
+                    email=self.scope["user"],
                     contents=message,
-                    )
+                )
 
                 # 해시태그 입력 받기
                 while True:
                     hashtag_name = input("hashtag: ")
-                    
                     if hashtag_name == "":
                         break
 
@@ -113,6 +125,14 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
             # 웹소켓 연결 종료
             self.close()
+        elif content_dict["type"] == "end-notsave-conversation":
+            # 채팅 내역 저장 안함
+            room = self.get_room()
+            # 변수 초기화
+            self.gpt_messages.clear()
+            self.recommend_message = ""
+            # 웹소켓 연결 종료
+            self.close()
         else:
             self.send_json(
                 {
@@ -122,7 +142,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             )
 
     # user의 채팅방 조회
-    def get_room(self) -> RolePlayingRoom | None:
+    def get_room(self, **kwargs) -> RolePlayingRoom | None:
         user: AbstractUser = self.scope["user"]
         room_pk = self.scope["url_route"]["kwargs"]["room_pk"]
         room: RolePlayingRoom = None
@@ -160,7 +180,6 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         return response_content
 
 
-
 class MyConsumer(JsonWebsocketConsumer):
     def connect(self):
         self.accept()
@@ -182,4 +201,3 @@ class MyConsumer(JsonWebsocketConsumer):
                 "message": message,
             }
         )
-

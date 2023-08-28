@@ -1,0 +1,36 @@
+# 어플리케이션의 런타임 설정(Python 3.11 사용)
+runtime: python311
+
+# websocket 사용을 위한 App Engine 의 FLEX 환경 사용 
+#env: flex -> python version 3.7까지만 지원됨.
+
+# CPU 성능이 좀 더 높은 F2 인스턴스 클래스 선택
+instance_class: F2
+
+# 인스턴스가 자동으로 스케일되도록 설정
+automatic_scaling:
+  # CPU 사용률이 65% 이상일 때 인스턴스가 자동으로 추가되어 스케일링 함
+  target_cpu_utilization: 0.65
+
+#인스턴스의 리소스 할당량 설정
+resources:
+  cpu: 1 # 가상 CPU 코어 수 설정 (1개)
+  memory_gb: 0.5 # 메모리 크기 (0.5GB)
+  disk_size_gb: 10 # 디스크 크기 (10GB)
+
+# 어플리케이션에서 사용하는 환경 변수 설정
+env_variables:
+  # DJANGO_SETTINGS_MODULE 환경 변수 설정
+  DJANGO_SETTINGS_MODULE: "config.settings"
+
+# 애플리케이션 진입점 설정 (gunicorn 워커로 실행)
+entrypoint: gunicorn config.wsgi:application
+
+# URL 핸들러 구성
+handlers:
+# 정적 파일 디렉토리 설정
+- url: /static
+  static_dir: static/
+# 모든 URL 패턴을 처리하는 스크립트 설정 (Django 애플리케이션)
+- url: /.*
+  script: auto
