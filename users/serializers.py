@@ -1,5 +1,18 @@
+from django.contrib.auth import get_user_model
 from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from .models import User
+
+# 회원가입 기능 구현을 위한 serializer
+User = get_user_model()
+
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "birth", "phonenumber", "nickname", "email", "password")
 
 
 class TinyUserSerializer(ModelSerializer):

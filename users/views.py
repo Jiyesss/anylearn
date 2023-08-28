@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -6,6 +8,8 @@ from rest_framework.exceptions import ParseError, NotFound
 from rest_framework.permissions import IsAuthenticated
 from users.models import User
 from . import serializers
+from .serializers import UserRegistrationSerializer
+
 
 class Me(APIView):
     permission_classes = [IsAuthenticated] # /me가 
@@ -107,3 +111,21 @@ class LogOut(APIView):
     def post(self, request):
         logout(request)
         return Response({"ok": "bye!"})
+
+class UserRegistrationView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegistrationSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            # password을 해시화 한 후 저장
+            user = serializer.save(
+                password=make_password(serializer.validated_data["password"])
+            )
+            return Response(
+                {"message": "회원가입이 성공적으로 완료되었습니다."}, status=status.HTTP_201_CREATED
+            )
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

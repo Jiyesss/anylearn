@@ -8,4 +8,5 @@ urlpatterns = [
     path("sign_in", views.LogIn.as_view()),
     path("sign_out", views.LogOut.as_view()),
     path("@<str:email>", views.PublicUser.as_view()),
-]
+    path("sign_up", views.UserRegistrationView.as_view()),
+    ]
