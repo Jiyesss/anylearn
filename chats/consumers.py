@@ -7,7 +7,9 @@ from typing import List
 from django.contrib.auth.models import AbstractUser
 from chats.models import RolePlayingRoom, GptMessage
 import openai
-from scripts.models import Script
+from scripts.models import Script, Tag
+from django.utils import timezone
+from .serializers import RolePlayingRoomSerializer
 
 
 # 상속받은 클래스에 기본 기능 구현되어 있음
@@ -17,6 +19,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         self.gpt_messages: List[GptMessage] = []
         self.recommend_message: str = ""
         self.room_pk = None
+        self.room_level = 1
 
     # 웹소켓 접속 유저가 원하는 채팅방과 연결(connect)
     def connect(self):
@@ -28,6 +31,8 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
             # room_pk값
             room_pk = self.scope["url_route"]["kwargs"]["room_pk"]
+            # user가 선택한 level
+            self.room_level = room.level
             # user의 초기 설정
             self.gpt_messages = room.get_initial_messages()
             # gpt의 추천 표현
@@ -48,7 +53,13 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         # user의 메세지를 받아서
         if content_dict["type"] == "user-message":
             assistant_message = self.get_query(user_query=content_dict["message"])
-            # 직렬화
+            # level이 1인 경우에는 번역
+            if self.room_level == 1:
+                translated_message = RolePlayingRoomSerializer._translate(
+                    assistant_message, "en", "ko"
+                )
+                assistant_message += f"({translated_message}) "
+            # 아닌 경우에는 영어만
             self.send_json(
                 {
                     "type": "assistant-message",
@@ -67,9 +78,35 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             # 채팅 내역 저장
             room = self.get_room()
             if room:
+                message = []
                 for gpt_message in self.gpt_messages:
-                    message = Script(contents=gpt_message.content)
-                    message.save()
+                    message.append(gpt_message["content"])
+                    # message = Script(contents=gpt_message.content)
+                message = " ".join(message)
+                title = input("title: ")
+                # Script 객체 생성 (DB에 저장)
+                script = Script.objects.create(
+                    title=title,
+                    level=self.room_level,
+                    learningDate=timezone.now(),  # 현재 날짜 사용
+                    email=self.scope["user"],
+                    contents=message,
+                )
+
+                # 해시태그 입력 받기
+                while True:
+                    hashtag_name = input("hashtag: ")
+
+                    if hashtag_name == "":
+                        break
+
+                    # 해시태그 DB에 저장 (이미 존재한다면 가져오기)
+                    hashtag, created = Tag.objects.get_or_create(tag=hashtag_name)
+
+                    # Script와 연결
+                    script.hashtag.add(hashtag)  # add() 함수 사용
+
+                script.save()  # 변경 사항 DB에 저장
 
             # 변수 초기화
             self.gpt_messages.clear()
