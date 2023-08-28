@@ -82,7 +82,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                 for gpt_message in self.gpt_messages:
                     message.append(gpt_message["content"])
                     # message = Script(contents=gpt_message.content)
-                message = " ".join(message)
+                message = " ".join(message[2:])
                 title = input("title: ")
                 # Script 객체 생성 (DB에 저장)
                 script = Script.objects.create(
