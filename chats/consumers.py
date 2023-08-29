@@ -8,16 +8,9 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from chats.models import RolePlayingRoom, GptMessage
 import openai
-<<<<<<< HEAD
-from scripts.models import Script,Tag
-from django.utils import timezone
-from .serializers import RolePlayingRoomSerializer
-=======
 from scripts.models import Script, Tag
 from django.utils import timezone
 from .serializers import RolePlayingRoomSerializer
-
->>>>>>> 78771f25d52325f1587e499096393201ef388040
 
 # 상속받은 클래스에 기본 기능 구현되어 있음
 class RolePlayingRoomConsumer(JsonWebsocketConsumer):
@@ -25,10 +18,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         super().__init__(*args, **kwargs)
         self.gpt_messages: List[GptMessage] = []
         self.recommend_message: str = ""
-<<<<<<< HEAD
-=======
         self.room_pk = None
->>>>>>> 78771f25d52325f1587e499096393201ef388040
         self.room_level = 1
 
     # 웹소켓 접속 유저가 원하는 채팅방과 연결(connect)
