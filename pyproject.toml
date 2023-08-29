@@ -18,6 +18,7 @@ python = "^3.11"
 django = "^4.2.4"
 gitignore = "^0.0.8"
 djangorestframework = "^3.14.0"
+Websockets = "^11.0.3"
 google-cloud-texttospeech = "^2.14.1"
 google-cloud-storage = "^2.10.0"
 google-cloud-speech = "^2.21.0"
@@ -28,7 +29,6 @@ gunicorn = "^21.2.0"
 mysqlclient = "^2.1.0"
 mysql = "^0.0.3"
 djangorestframework-api-key = "^2.3.0"
-
 
 [build-system]
 requires = ["poetry-core"]

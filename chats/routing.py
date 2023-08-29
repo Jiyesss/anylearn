@@ -7,3 +7,4 @@ websocket_urlpatterns = [
     path("ws/chats/<int:room_pk>/", consumers.RolePlayingRoomConsumer.as_asgi()),
     path("ws/connect_path/", consumers.MyConsumer.as_asgi()),
 ]
+
