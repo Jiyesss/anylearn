@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
+from django.shortcuts import redirect
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -109,6 +110,8 @@ class LogOut(APIView):
 
     def post(self, request):
         logout(request)
+        response = redirect("login")  # 로그아웃 후 리다이렉트할 URL 설정
+        response.delete_cookie("cookie_name")  # 관련 쿠키 삭제
         return Response({"ok": "bye!"})
 
 
