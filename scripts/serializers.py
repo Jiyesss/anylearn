@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework.serializers import ModelSerializer, SlugRelatedField
 from .models import Script, Tag
 from diaries.models import Diary
@@ -24,8 +25,11 @@ class ScriptTinySerializer(ModelSerializer):
         model = Script
         fields = ("hashtag", "contents", "add_diary")
 
+    def get_serializer_context(self):
+        return {"request": self.request}
+
     def hashtag_update(self, hashtag_data, instance):
-        # Update the associated tags for the script
+        # 변경된 해시태그 존재 시, 업데이트 후 반환하기
         if hashtag_data is not None:
             instance.hashtag.clear()
             for tag_data in hashtag_data:
@@ -38,22 +42,22 @@ class ScriptTinySerializer(ModelSerializer):
             # hashtag 데이터 추출 후 삭제
             hashtag_data = validated_data.pop("hashtag", [])
 
-            # Update other fields as needed...
+            # 나머지 필드 업데이트
             instance.contents = validated_data.get("contents", instance.contents)
             instance.add_diary = validated_data.get("add_diary", instance.add_diary)
             instance.save()
 
+            # hashtag 필드 업데이트 적용
             instance = self.hashtag_update(hashtag_data, instance)
 
             return instance
 
         elif "contents" in validated_data:
-            # Update contents field
+            # contents 데이터 추출 및 업데이트
             instance.contents = validated_data.get("contents", instance.contents)
 
-            # Update other fields as needed...
+            # 나머지 필드 업데이트
             hashtag_data = validated_data.pop("hashtag", None)
-
             instance = self.hashtag_update(hashtag_data, instance)
             instance.add_diary = validated_data.get("add_diary", instance.add_diary)
             instance.save()
@@ -61,16 +65,22 @@ class ScriptTinySerializer(ModelSerializer):
             return instance
 
         elif "add_diary" in validated_data:
-            # Update other fields as needed...
+            # 나머지 필드 업데이트
             instance.contents = validated_data.get("contents", instance.contents)
             hashtag_data = validated_data.pop("hashtag", None)
             instance = self.hashtag_update(hashtag_data, instance)
             instance.save()
 
+            # add_diary == 1 이라면, Diary 객체에 새로운 object 생성하기 with instance.contents
             if validated_data.get("add_diary") == 1:
-                created_diary = Diary.objects.get_or_create(
-                    diaryContents=instance.contents
+                created_diary = Diary.objects.create(
+                    fromScript=instance.contents,
+                    nowDate=timezone.now(),
+                    comment="",
+                    user_email=self.context["request"].user,
                 )
+                created_diary.diaryContents.add(instance)
+                created_diary.save()
             return instance
 
 
