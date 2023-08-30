@@ -16,13 +16,22 @@ class TagSerializer(ModelSerializer):
         fields = ["tag"]
 
 
-# put요청할 때, 두가지 필드만 입력받기 위한 serializer
+# put요청할 때, 원하는 필드만 입력받기 위한 serializer
 class ScriptTinySerializer(ModelSerializer):
     hashtag = TagSerializer(many=True)
 
     class Meta:
         model = Script
         fields = ("hashtag", "contents", "add_diary")
+
+    def hashtag_update(self, hashtag_data, instance):
+        # Update the associated tags for the script
+        if hashtag_data is not None:
+            instance.hashtag.clear()
+            for tag_data in hashtag_data:
+                tag, created = Tag.objects.get_or_create(tag=tag_data["tag"])
+                instance.hashtag.add(tag)
+        return instance
 
     def update(self, instance, validated_data):
         if "hashtag" in validated_data:
@@ -34,12 +43,7 @@ class ScriptTinySerializer(ModelSerializer):
             instance.add_diary = validated_data.get("add_diary", instance.add_diary)
             instance.save()
 
-            # Update the associated tags for the script
-            if hashtag_data is not None:
-                instance.hashtag.clear()
-                for tag_data in hashtag_data:
-                    tag, created = Tag.objects.get_or_create(tag=tag_data["tag"])
-                    instance.hashtag.add(tag)
+            instance = self.hashtag_update(hashtag_data, instance)
 
             return instance
 
@@ -50,25 +54,23 @@ class ScriptTinySerializer(ModelSerializer):
             # Update other fields as needed...
             hashtag_data = validated_data.pop("hashtag", None)
 
-            if hashtag_data is not None:
-                instance.hashtag.clear()
-                for tag_data in hashtag_data:
-                    tag, created = Tag.objects.get_or_create(tag=tag_data["tag"])
-                    instance.hashtag.add(tag)
+            instance = self.hashtag_update(hashtag_data, instance)
             instance.add_diary = validated_data.get("add_diary", instance.add_diary)
             instance.save()
 
             return instance
 
         elif "add_diary" in validated_data:
-            add_diary_data = 1
-
             # Update other fields as needed...
             instance.contents = validated_data.get("contents", instance.contents)
-            instance.hashtag = validated_data.get("hashtag", instance.hashtag)
+            instance = self.hashtag_update(hashtag_data, instance)
             instance.save()
 
-            created_diary = Diary.objects.get_or_create(diaryContents=instance.contents)
+            if validated_data.get("add_diary") == 1:
+                created_diary = Diary.objects.get_or_create(
+                    diaryContents=instance.contents
+                )
+            return instance
 
 
 # 전체 scripts를 보기 위한 serializer
