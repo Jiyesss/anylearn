@@ -63,6 +63,7 @@ class ScriptTinySerializer(ModelSerializer):
         elif "add_diary" in validated_data:
             # Update other fields as needed...
             instance.contents = validated_data.get("contents", instance.contents)
+            hashtag_data = validated_data.pop("hashtag", None)
             instance = self.hashtag_update(hashtag_data, instance)
             instance.save()
 
