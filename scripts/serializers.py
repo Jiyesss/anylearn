@@ -69,12 +69,12 @@ class ScriptTinySerializer(ModelSerializer):
             instance.contents = validated_data.get("contents", instance.contents)
             hashtag_data = validated_data.pop("hashtag", None)
             instance = self.hashtag_update(hashtag_data, instance)
+            instance.add_diary = validated_data.get("add_diary", instance.add_diary)
             instance.save()
 
             # add_diary == 1 이라면, Diary 객체에 새로운 object 생성하기 with instance.contents
-            if validated_data.get("add_diary") == 1:
+            if instance.add_diary == 1:
                 created_diary = Diary.objects.create(
-                    fromScript=instance.contents,
                     nowDate=timezone.now(),
                     comment="",
                     user_email=self.context["request"].user,
