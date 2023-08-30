@@ -15,7 +15,7 @@ from gtts import gTTS
 # /api/v1/chats url에 접근했을 때 API
 class Chats(APIView):
     def get(self, request):
-        all_chats = RolePlayingRoom.objects.all()
+        all_chats = RolePlayingRoom.objects.filter(user=self.request.user)
         serializer = RolePlayingRoomSerializer(
             all_chats,
             many=True,
