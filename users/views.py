@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import ParseError, NotFound
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 from users.models import User
 from . import serializers
 from .serializers import UserRegistrationSerializer
@@ -100,7 +101,15 @@ class LogIn(APIView):
         )
         if user:
             login(request, user)
-            return Response({"ok": "Welcome!"})
+            token, created = Token.objects.get_or_create(user=user)
+            return Response(
+                {
+                    "token": token.key,
+                    "user_id": user.pk,
+                    "email": user.email,
+                    "ok": "Welcome!",
+                }
+            )
         else:
             return Response({"error": "wrong password"})
 
