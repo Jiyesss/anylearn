@@ -10,7 +10,7 @@ from .serializers import ScriptSerializer, ScriptTinySerializer, ScriptDetailSer
 # /api/v1/scripts url에 접근했을 때 API
 class Scripts(APIView):
     def get(self, requet):
-        all_scripts = Script.objects.filter(user=self.request.user)
+        all_scripts = Script.objects.filter(email=self.request.user)
         serializer = ScriptSerializer(
             all_scripts,
             many=True,
@@ -22,7 +22,7 @@ class Scripts(APIView):
 class ScriptDetail(APIView):
     def get_object(self, pk):
         try:
-            return Script.objects.get(pk=pk, user=self.request.user)
+            return Script.objects.get(pk=pk, email=self.request.user)
         except Script.DoesNotExist:
             raise NotFound
 
