@@ -105,6 +105,7 @@ class LogIn(APIView):
             return Response(
                 {
                     "token": token.key,
+                    "session_id": request.session.session_key,
                     "user_id": user.pk,
                     "email": user.email,
                     "ok": "Welcome!",
