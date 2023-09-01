@@ -72,15 +72,6 @@ class ScriptTinySerializer(ModelSerializer):
             instance.add_diary = validated_data.get("add_diary", instance.add_diary)
             instance.save()
 
-            # add_diary == 1 이라면, Diary 객체에 새로운 object 생성하기 with instance.contents
-            if instance.add_diary == 1:
-                created_diary = Diary.objects.create(
-                    nowDate=timezone.now(),
-                    comment="",
-                    user_email=self.context["request"].user,
-                )
-                created_diary.diaryContents.add(instance)
-                created_diary.save()
             return instance
 
 

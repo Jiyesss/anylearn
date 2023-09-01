@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import status
 from .models import Script
+from diaries.models import Diary
 from .serializers import ScriptSerializer, ScriptTinySerializer, ScriptDetailSerializer
 
 
@@ -40,6 +41,20 @@ class ScriptDetail(APIView):
         )
         if serializer.is_valid():
             updated_script = serializer.save()
+
+            # "add_diary" 값이 1인 경우 처리
+            add_diary = request.data.get("add_diary", None)
+            if add_diary == 1:
+                # Diaries 모델에 새로운 diary 생성
+                diary = Diary.objects.create(
+                    nowDate=timezone.now(),
+                    comment="",
+                    user_email=request.user,
+                )
+
+                # 생성된 diary와 script 연결
+                diary.diaryContents.add(updated_script)
+                diary.save()
             return Response(
                 ScriptTinySerializer(updated_script).data,
             )
