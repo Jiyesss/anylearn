@@ -27,6 +27,12 @@ class ScriptDetail(APIView):
         except Script.DoesNotExist:
             raise NotFound
 
+    def get_diary(self, script, date):
+        try:
+            return Diary.objects.get(nowDate=date, user_email=self.request.user)
+        except Diary.DoesNotExist:
+            return None
+
     def get(self, request, pk):
         script = self.get_object(pk)
         serializer = ScriptDetailSerializer(script)
@@ -45,12 +51,19 @@ class ScriptDetail(APIView):
             # "add_diary" 값이 1인 경우 처리
             add_diary = request.data.get("add_diary", None)
             if add_diary == 1:
-                # Diaries 모델에 새로운 diary 생성
-                diary = Diary.objects.create(
-                    nowDate=timezone.now(),
-                    comment="",
-                    user_email=request.user,
-                )
+                # 현재 날짜 가져오기
+                current_date = timezone.now().date()
+
+                # 같은 날짜의 Diary 가져오기
+                diary = self.get_diary(updated_script, current_date)
+
+                # Diary가 없다면 새로 생성
+                if not diary:
+                    diary = Diary.objects.create(
+                        nowDate=current_date,
+                        comment="",
+                        user_email=request.user,
+                    )
 
                 # 생성된 diary와 script 연결
                 diary.diaryContents.add(updated_script)
