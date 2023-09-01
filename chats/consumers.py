@@ -94,7 +94,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     email=self.scope["user"],
                     contents=message,
                     add_diary=0,
-			)
+                )
 
                 # 해시태그 입력 받기
                 while True:
