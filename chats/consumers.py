@@ -115,6 +115,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
             # 웹소켓 연결 종료
             self.close()
+
         elif content_dict["type"] == "end-notsave-conversation":
             # 채팅 내역 저장 안함
             room = self.get_room()
@@ -123,6 +124,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.recommend_message = ""
             # 웹소켓 연결 종료
             self.close()
+
         else:
             self.send_json(
                 {
