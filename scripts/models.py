@@ -32,5 +32,6 @@ class Script(models.Model):
     )
     add_diary = models.IntegerField(
         null=True,
+        default=0,
         # 1인 경우, diaries에 script 추가하기
     )

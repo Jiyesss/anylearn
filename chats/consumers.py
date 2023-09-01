@@ -91,6 +91,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     learningDate=timezone.now(),  # 현재 날짜 사용
                     email=self.scope["user"],
                     contents=message,
+                    add_diary=0,
                 )
 
                 # 해시태그 입력 받기
