@@ -10,7 +10,7 @@ from .serializers import DiarySerializer, TinyDiarySerializer, DiaryDetailSerial
 # /api/v1/diaries url에 접근했을 때 API
 class Diaries(APIView):
     def get(self, requet):
-        all_diaries = Diary.objects.all()
+        all_diaries = Diary.objects.filter(user_email=self.request.user)
         serializer = DiarySerializer(
             all_diaries,
             many=True,
@@ -22,7 +22,7 @@ class Diaries(APIView):
 class DiaryDetail(APIView):
     def get_object(self, date):
         try:
-            return Diary.objects.get(nowDate=date)
+            return Diary.objects.get(nowDate=date, user_email=self.request.user)
         except Diary.DoesNotExist:
             raise NotFound
 
