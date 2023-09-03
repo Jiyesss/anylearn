@@ -4,13 +4,13 @@
 from channels.generic.websocket import JsonWebsocketConsumer
 from pprint import pprint
 from typing import List
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from chats.models import RolePlayingRoom, GptMessage
 import openai
 from scripts.models import Script, Tag
 from django.utils import timezone
 from .serializers import RolePlayingRoomSerializer
-
 
 # 상속받은 클래스에 기본 기능 구현되어 있음
 class RolePlayingRoomConsumer(JsonWebsocketConsumer):
@@ -35,6 +35,8 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.room_level = room.level
             # user의 초기 설정
             self.gpt_messages = room.get_initial_messages()
+            # user의 level 설정
+            self.room_level = room.level
             # gpt의 추천 표현
             self.recommend_message = room.get_recommend_message()
             # gpt의 초기 설정
@@ -97,7 +99,6 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                 # 해시태그 입력 받기
                 while True:
                     hashtag_name = input("hashtag: ")
-
                     if hashtag_name == "":
                         break
 

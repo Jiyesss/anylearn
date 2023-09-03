@@ -23,14 +23,3 @@ def google_translate(
 
     # 번역된 텍스트 반환
     return translation["translatedText"]
-
-
-"""
-if __name__ == "__main__":
-    text = "안녕하세요. 좋은 하루 보내세요."
-    source_lang = "ko"
-    target_lang = "en"
-
-    translated_text = google_translate(text, source_lang, target_lang)
-    print("Translated text:", translated_text)
-"""
