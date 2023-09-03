@@ -180,11 +180,9 @@ CORS_ALLOW_WEBSOCKETS = True  # 웹소켓에 대한 CORS 허용 설정
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://192.168.88.1:8000",
-    "https://hf151-395305.df.r.appspot.com",
     # 다른 허용하고자 하는 도메인을 추가할 수 있습니다.
 ]
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
-    "https://hf151-395305.df.r.appspot.com",
 ]
