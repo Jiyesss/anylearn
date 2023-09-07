@@ -78,7 +78,12 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
         # 종료하기
         elif content_dict["type"] == "end-conversation":
-            self.send_json({"type": "assistant-message", "message": "end."})
+            self.send_json(
+                {
+                    "type": "assistant-message",
+                    "message": "Do you save this script?",
+                }
+            )
 
         # 저장함
         elif content_dict["type"] == "save":
@@ -90,10 +95,10 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     message.append(gpt_message["content"])
                     # message = Script(contents=gpt_message.content)
                 message = " ".join(message[2:])
-                title = input("title: ")
+
                 # Script 객체 생성 (DB에 저장)
                 script = Script.objects.create(
-                    title=title,
+                    title=content_dict["title"],  # 수정된 부분
                     level=self.room_level,
                     learningDate=timezone.now(),  # 현재 날짜 사용
                     email=self.scope["user"],
@@ -102,11 +107,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                 )
 
                 # 해시태그 입력 받기
-                while True:
-                    hashtag_name = input("hashtag: ")
-                    if hashtag_name == "":
-                        break
-
+                for hashtag_name in content_dict["hashtags"]:  # 수정된 부분
                     # 해시태그 DB에 저장 (이미 존재한다면 가져오기)
                     hashtag, created = Tag.objects.get_or_create(tag=hashtag_name)
 
