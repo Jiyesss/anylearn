@@ -23,7 +23,7 @@ class ScriptTinySerializer(ModelSerializer):
 
     class Meta:
         model = Script
-        fields = ("hashtag", "contents", "add_diary")
+        fields = ("hashtag", "contents", "add_diary", "show_expr", "input_expr")
 
     def get_serializer_context(self):
         return {"request": self.request}
@@ -45,6 +45,8 @@ class ScriptTinySerializer(ModelSerializer):
             # 나머지 필드 업데이트
             instance.contents = validated_data.get("contents", instance.contents)
             instance.add_diary = validated_data.get("add_diary", instance.add_diary)
+            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
+            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
             instance.save()
 
             # hashtag 필드 업데이트 적용
@@ -60,6 +62,36 @@ class ScriptTinySerializer(ModelSerializer):
             hashtag_data = validated_data.pop("hashtag", None)
             instance = self.hashtag_update(hashtag_data, instance)
             instance.add_diary = validated_data.get("add_diary", instance.add_diary)
+            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
+            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
+            instance.save()
+
+            return instance
+
+        elif "show_expr" in validated_data:
+            # show_expr 데이터 추출 및 업데이트
+            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
+
+            # 나머지 필드 업데이트
+            hashtag_data = validated_data.pop("hashtag", None)
+            instance = self.hashtag_update(hashtag_data, instance)
+            instance.add_diary = validated_data.get("add_diary", instance.add_diary)
+            instance.contents = validated_data.get("contents", instance.contents)
+            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
+            instance.save()
+
+            return instance
+
+        elif "input_expr" in validated_data:
+            # input_expr 데이터 추출 및 업데이트
+            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
+
+            # 나머지 필드 업데이트
+            hashtag_data = validated_data.pop("hashtag", None)
+            instance = self.hashtag_update(hashtag_data, instance)
+            instance.add_diary = validated_data.get("add_diary", instance.add_diary)
+            instance.contents = validated_data.get("contents", instance.contents)
+            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
             instance.save()
 
             return instance
@@ -70,6 +102,8 @@ class ScriptTinySerializer(ModelSerializer):
             hashtag_data = validated_data.pop("hashtag", None)
             instance = self.hashtag_update(hashtag_data, instance)
             instance.add_diary = validated_data.get("add_diary", instance.add_diary)
+            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
+            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
             instance.save()
 
             return instance
