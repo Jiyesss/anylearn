@@ -35,3 +35,12 @@ class Script(models.Model):
         default=0,
         # 1인 경우, diaries에 script 추가하기
     )
+    show_expr = models.IntegerField(
+        null=True,
+        default=0,
+        # 1인 경우, diaries에 script 추가하기
+    )
+    input_expr = models.TextField(
+        null=True,
+        default=0,
+    )

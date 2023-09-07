@@ -75,7 +75,13 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     "message": recommended_message,
                 }
             )
-        elif content_dict["type"] == "end-save-conversation":
+
+        # 종료하기
+        elif content_dict["type"] == "end-conversation":
+            self.send_json({"type": "assistant-message", "message": "end."})
+
+        # 저장함
+        elif content_dict["type"] == "save":
             # 채팅 내역 저장
             room = self.get_room()
             if room:
@@ -116,7 +122,8 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             # 웹소켓 연결 종료
             self.close()
 
-        elif content_dict["type"] == "end-notsave-conversation":
+        # 저장안함.
+        elif content_dict["type"] == "notSave":
             # 채팅 내역 저장 안함
             room = self.get_room()
             # 변수 초기화

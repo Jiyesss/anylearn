@@ -67,14 +67,6 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ["birth", "name", "nickname", "phonenumber"]
 
     # AbstractUser에서 받아온 필드 중 수정하고 싶지 않은 필드 지정하기
-    first_name = models.CharField(
-        max_length=150,
-        editable=False,
-    )
-    last_name = models.CharField(
-        max_length=150,
-        editable=False,
-    )
     # 입력받고 싶은 필드들 작성하기
     name = models.CharField(
         max_length=30,

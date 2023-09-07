@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import status
+import openai
 from .models import Script
 from diaries.models import Diary
 from .serializers import ScriptSerializer, ScriptTinySerializer, ScriptDetailSerializer
@@ -47,6 +48,19 @@ class ScriptDetail(APIView):
         )
         if serializer.is_valid():
             updated_script = serializer.save()
+            response_data = ScriptTinySerializer(updated_script).data
+
+            # "show_expr" 값이 1인 경우 처리
+            # openai.api_key = 'your-api-key'
+            show_expr = request.data.get("show_expr", None)
+            input_expr = request.data.get("input_expr", None)
+            if show_expr == 1:
+                response = openai.Completion.create(
+                    engine="text-davinci-002",
+                    prompt=f"Rewrite the following sentence in a different way: '{input_expr}'",
+                    max_tokens=60,
+                )
+                response_data["paraphrase"] = response.choices[0].text.strip()
 
             # "add_diary" 값이 1인 경우 처리
             add_diary = request.data.get("add_diary", None)
@@ -68,9 +82,9 @@ class ScriptDetail(APIView):
                 # 생성된 diary와 script 연결
                 diary.diaryContents.add(updated_script)
                 diary.save()
-            return Response(
-                ScriptTinySerializer(updated_script).data,
-            )
+                response_data["diary_added"] = True
+
+            return Response(response_data)
         else:
             return Response(serializer.errors)
 
