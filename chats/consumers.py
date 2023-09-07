@@ -12,6 +12,7 @@ from scripts.models import Script, Tag
 from django.utils import timezone
 from .serializers import RolePlayingRoomSerializer
 
+
 # 상속받은 클래스에 기본 기능 구현되어 있음
 class RolePlayingRoomConsumer(JsonWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -31,8 +32,6 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
 
             # room_pk값
             room_pk = self.scope["url_route"]["kwargs"]["room_pk"]
-            # user가 선택한 level
-            self.room_level = room.level
             # user의 초기 설정
             self.gpt_messages = room.get_initial_messages()
             # user의 level 설정

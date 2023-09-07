@@ -120,9 +120,8 @@ class LogOut(APIView):
 
     def post(self, request):
         logout(request)
-        response = redirect('sign_in')  # 로그아웃 후 리다이렉트할 URL 설정
-        response.delete_cookie('csrftoken')  # 관련 쿠키 삭제
         return Response({"ok": "bye!"})
+
 
 class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()

@@ -30,6 +30,7 @@ mysqlclient = "^2.1.0"
 mysql = "^0.0.3"
 djangorestframework-api-key = "^2.3.0"
 
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
