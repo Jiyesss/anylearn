@@ -7,12 +7,31 @@ from .models import User
 User = get_user_model()
 
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
+class UserRegistrationStep1Serializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ("username", "birth", "phonenumber", "nickname", "email", "password")
+        fields = ("email", "password", "username", "birth", "phonenumber")
+
+
+class UserRegistrationStep2Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "nickname", "avatar"
+
+    def create(self, validated_data):
+        user = super().create(validated_data)
+
+        user.email = self.context["email"]
+        user.password = self.context["password"]
+        user.username = self.context["username"]
+        user.birth = self.context["birth"]
+        user.phonenumber = self.context["phonenumber"]
+
+        user.save()
+
+        return user
 
 
 class TinyUserSerializer(ModelSerializer):
