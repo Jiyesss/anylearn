@@ -7,31 +7,26 @@ from .models import User
 User = get_user_model()
 
 
-class UserRegistrationStep1Serializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
+    # 여기서 nickname, avatar를 가져와야..하나?....음~
     class Meta:
         model = User
-        fields = ("email", "password", "username", "birth", "phonenumber")
+        fields = ("username", "birth", "phonenumber", "email", "password")
 
 
-class UserRegistrationStep2Serializer(serializers.ModelSerializer):
+class UserRegistrationSerializer_two(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "nickname", "avatar"
+        fields = ("nickname", "avatar")
 
-    def create(self, validated_data):
-        user = super().create(validated_data)
+    def update(self, instance, validated_data):
+        instance.nickname = validated_data.get("nickname", instance.nickname)
+        instance.avatar = validated_data.get("avatar", instance.avatar)
+        instance.save()
 
-        user.email = self.context["email"]
-        user.password = self.context["password"]
-        user.username = self.context["username"]
-        user.birth = self.context["birth"]
-        user.phonenumber = self.context["phonenumber"]
-
-        user.save()
-
-        return user
+        return instance
 
 
 class TinyUserSerializer(ModelSerializer):
@@ -41,6 +36,7 @@ class TinyUserSerializer(ModelSerializer):
             "name",
             "avatar",
             "username",
+            "nickname",
         )
 
 

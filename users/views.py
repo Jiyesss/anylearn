@@ -12,8 +12,9 @@ from rest_framework.authtoken.models import Token
 from users.models import User
 from . import serializers
 from .serializers import (
-    UserRegistrationStep1Serializer,
-    UserRegistrationStep2Serializer,
+    UserRegistrationSerializer,
+    UserRegistrationSerializer_two,
+    TinyUserSerializer,
 )
 
 
@@ -128,74 +129,49 @@ class LogOut(APIView):
 
 
 class UserRegistrationView(generics.CreateAPIView):
+    # step1
     queryset = User.objects.all()
-    serializer_class = UserRegistrationStep1Serializer
+    serializer_class = UserRegistrationSerializer
 
     def create(self, request, *args, **kwargs):
-        # URL 경로나 쿼리 파라미터 등에서 세션 키를 가져온다.
-        session_key = kwargs.get("session_key")
-
-        try:
-            session_data = Session.objects.get(session_key=session_key).get_decoded()
-        except Session.DoesNotExist:
-            return Response(
-                {"error": "Invalid session key."}, status=status.HTTP_400_BAD_REQUEST
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            # password을 해시화 한 후 저장
+            user = serializer.save(
+                password=make_password(serializer.validated_data["password"])
             )
+            login(request, user)
+            return Response(status=status.HTTP_201_CREATED)
 
-        # 첫 번째 단계 시리얼라이저를 사용하여 데이터 검증
-        serializer_step1 = self.get_serializer(
-            data=session_data, context={"request": request}
+
+class UserRegistrationView_two(generics.UpdateAPIView):
+    serializer_class = UserRegistrationSerializer_two
+
+    def put(self, request):
+        # step1에서 만든 유저를 가져오기
+        user = request.user
+        serializer_context = {
+            "request": request,
+            "user_instance": user,
+        }
+
+        # 수정 사항 serializer에 입력하기
+        serializer = self.get_serializer(
+            user,
+            data=request.data,
+            context=serializer_context,
+            partial=True,
         )
 
-        # 두 번째 단계로 넘어가기 전에 세션 데이터에서 필요한 데이터를 추출
-        if serializer_step1.is_valid():
-            email = session_data.get("email")
-            password_hashed = session_data.get("password")
-            username = session_data.get("username")
-            birth = session_data.get("birth")
-            phonenumber = session_data.get("phonenumber")
-
-            # 첫 번째 단계 데이터를 저장
-            user = serializer_step1.save()
-
-            if (
-                not email
-                or not password_hashed
-                or not username
-                or not birth
-                or not phonenumber
-            ):
-                return Response(
-                    {"error": "Incomplete registration data."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            # 두 번째 단계로 넘어가기 위해 두 번째 시리얼라이저로 변경
-            self.serializer_class = UserRegistrationStep2Serializer
-
-            serializer_context = {
-                "request": request,
-                "email": email,
-                "password": password_hashed,
-                "username": username,
-                "birth": birth,
-                "phonenumber": phonenumber,
-            }
-
-            serializer_step2 = self.get_serializer(
-                data=request.data, context=serializer_context
+        # 수정 사항 serializer에서 검사하기
+        if serializer.is_valid():
+            updated_user = serializer.save()
+            return Response(
+                {
+                    "message": "회원가입이 성공적으로 완료되었습니다.",
+                    "user": UserRegistrationSerializer(updated_user).data,
+                },
+                status=status.HTTP_201_CREATED,
             )
-            if serializer_step2.is_valid():
-                # password을 해시화 한 후 저장
-                user = serializer_step2.save(
-                    password=make_password(serializer_step2.validated_data["password"])
-                )
-                return Response(
-                    {"message": "회원가입이 성공적으로 완료되었습니다."}, status=status.HTTP_201_CREATED
-                )
-            else:
-                return Response(
-                    serializer_step2.errors, status=status.HTTP_400_BAD_REQUEST
-                )
         else:
-            return Response(serializer_step1.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
