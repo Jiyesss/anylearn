@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
-from django.shortcuts import redirect
+from django.middleware.csrf import get_token
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,7 +10,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from users.models import User
 from . import serializers
-from .serializers import UserRegistrationSerializer
+from .serializers import (
+    UserRegistrationSerializer,
+    UserRegistrationSerializer_two,
+    TinyUserSerializer,
+)
 
 
 class Me(APIView):
@@ -101,15 +105,15 @@ class LogIn(APIView):
         )
         if user:
             login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
+            # token, created = Token.objects.get_or_create(user=user)
+            csrf_token = get_token(request)
+            session_id = request.session._get_or_create_session_key()
+            headers = {"X-CSRFToken": csrf_token, "Session-ID": session_id}
             return Response(
                 {
-                    "token": token.key,
-                    "session_id": request.session.session_key,
-                    "user_id": user.pk,
-                    "email": user.email,
                     "ok": "Welcome!",
-                }
+                },
+                headers=headers,
             )
         else:
             return Response({"error": "wrong password"})
@@ -124,6 +128,7 @@ class LogOut(APIView):
 
 
 class UserRegistrationView(generics.CreateAPIView):
+    # step1
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
 
@@ -134,8 +139,44 @@ class UserRegistrationView(generics.CreateAPIView):
             user = serializer.save(
                 password=make_password(serializer.validated_data["password"])
             )
+            login(request, user)
+
+            csrf_token = get_token(request)  # Get CSRF token
+            session_id = request.session._get_or_create_session_key()  # Get session ID
+            headers = {"X-CSRFToken": csrf_token, "Session-ID": session_id}
+            return Response(status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserRegistrationView_two(generics.UpdateAPIView):
+    serializer_class = UserRegistrationSerializer_two
+
+    def put(self, request):
+        # step1에서 만든 유저를 가져오기
+        user = request.user
+        serializer_context = {
+            "request": request,
+            "user_instance": user,
+        }
+
+        # 수정 사항 serializer에 입력하기
+        serializer = self.get_serializer(
+            user,
+            data=request.data,
+            context=serializer_context,
+            partial=True,
+        )
+
+        # 수정 사항 serializer에서 검사하기
+        if serializer.is_valid():
+            updated_user = serializer.save()
             return Response(
-                {"message": "회원가입이 성공적으로 완료되었습니다."}, status=status.HTTP_201_CREATED
+                {
+                    "message": "회원가입이 성공적으로 완료되었습니다.",
+                    "user": UserRegistrationSerializer(updated_user).data,
+                },
+                status=status.HTTP_201_CREATED,
             )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
