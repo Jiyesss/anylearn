@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
-from django.shortcuts import redirect
-from django.contrib.sessions.models import Session
+from django.middleware.csrf import get_token
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -106,15 +105,15 @@ class LogIn(APIView):
         )
         if user:
             login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
+            # token, created = Token.objects.get_or_create(user=user)
+            csrf_token = get_token(request)  # Get CSRF token
+            session_id = request.session._get_or_create_session_key()  # Get session ID
+            headers = {"X-CSRFToken": csrf_token, "Session-ID": session_id}
             return Response(
                 {
-                    "token": token.key,
-                    "session_id": request.session.session_key,
-                    "user_id": user.pk,
-                    "email": user.email,
                     "ok": "Welcome!",
-                }
+                },
+                headers=headers,
             )
         else:
             return Response({"error": "wrong password"})
@@ -141,7 +140,13 @@ class UserRegistrationView(generics.CreateAPIView):
                 password=make_password(serializer.validated_data["password"])
             )
             login(request, user)
-            return Response(status=status.HTTP_201_CREATED)
+
+            csrf_token = get_token(request)  # Get CSRF token
+            session_id = request.session._get_or_create_session_key()  # Get session ID
+            headers = {"X-CSRFToken": csrf_token, "Session-ID": session_id}
+            return Response(status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserRegistrationView_two(generics.UpdateAPIView):
