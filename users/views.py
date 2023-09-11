@@ -106,8 +106,8 @@ class LogIn(APIView):
         if user:
             login(request, user)
             # token, created = Token.objects.get_or_create(user=user)
-            csrf_token = get_token(request)  # Get CSRF token
-            session_id = request.session._get_or_create_session_key()  # Get session ID
+            csrf_token = get_token(request)
+            session_id = request.session._get_or_create_session_key()
             headers = {"X-CSRFToken": csrf_token, "Session-ID": session_id}
             return Response(
                 {
