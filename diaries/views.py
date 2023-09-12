@@ -31,8 +31,8 @@ class DiaryDetail(APIView):
         serializer = DiaryDetailSerializer(diary)
         return Response(serializer.data)
 
-    def put(self, request, id):
-        diary = self.get_object(id)
+    def put(self, request, date, format=None):
+        diary = self.get_object(date)
         serializer = TinyDiarySerializer(
             diary,
             data=request.data,
@@ -46,7 +46,7 @@ class DiaryDetail(APIView):
         else:
             return Response(serializer.errors)
 
-    def delete(self, request, id):
-        diary = self.get_object(id)
+    def delete(self, request, date):
+        diary = self.get_object(date)
         diary.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
