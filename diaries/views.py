@@ -20,6 +20,7 @@ class Diaries(APIView):
 
 # /api/v1/diaries/[NowDate] url에 접근했을 때 API
 class DiaryDetail(APIView):
+    # id가 아닌 date로 다이어리 찾아오기
     def get_object(self, date):
         try:
             return Diary.objects.get(nowDate=date, user_email=self.request.user)
@@ -46,7 +47,7 @@ class DiaryDetail(APIView):
         else:
             return Response(serializer.errors)
 
-    def delete(self, request, date):
+    def delete(self, date):
         diary = self.get_object(date)
         diary.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
