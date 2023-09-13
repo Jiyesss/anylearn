@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 from django.contrib import messages
 from django.utils.decorators import method_decorator
@@ -10,12 +11,15 @@ from rest_framework import status
 from .models import RolePlayingRoom
 from .serializers import ChatSerializer, ChatDetailSerializer, RolePlayingRoomSerializer
 from gtts import gTTS
-
+from users.models import User
 
 # /api/v1/chats url에 접근했을 때 API
 class Chats(APIView):
     def get(self, request):
-        all_chats = RolePlayingRoom.objects.filter(user=request.user)
+        user = User.objects.get(email=request.user.email)
+        all_chats = RolePlayingRoom.objects.filter(
+            user=user
+        )  # pk=request.user.id
         serializer = RolePlayingRoomSerializer(
             all_chats,
             many=True,
@@ -25,7 +29,8 @@ class Chats(APIView):
     def post(self, request):
         serializer = RolePlayingRoomSerializer(data=request.data)
         if serializer.is_valid():
-            new_chat = serializer.save(user=request.user)
+            user = User.objects.get(email=request.user.email)
+            new_chat = serializer.save(user=user)
             return Response(RolePlayingRoomSerializer(new_chat).data)
         else:
             return Response(serializer.errors)
@@ -63,3 +68,4 @@ class ChatDetail(APIView):
         chat = self.get_object(pk)
         chat.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
