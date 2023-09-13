@@ -13,13 +13,12 @@ from .serializers import ChatSerializer, ChatDetailSerializer, RolePlayingRoomSe
 from gtts import gTTS
 from users.models import User
 
+
 # /api/v1/chats url에 접근했을 때 API
 class Chats(APIView):
     def get(self, request):
         user = User.objects.get(email=request.user.email)
-        all_chats = RolePlayingRoom.objects.filter(
-            user=user
-        )  # pk=request.user.id
+        all_chats = RolePlayingRoom.objects.filter(user=user)  # pk=request.user.id
         serializer = RolePlayingRoomSerializer(
             all_chats,
             many=True,

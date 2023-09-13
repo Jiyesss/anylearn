@@ -74,8 +74,9 @@ class User(AbstractUser):
     avatar = models.URLField(
         blank=True,
     )
-    birth = models.DateField(
+    birth = models.CharField(
         null=True,
+        max_length=10,
     )
     phonenumber = models.CharField(
         max_length=20,
