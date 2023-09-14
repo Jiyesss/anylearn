@@ -20,6 +20,7 @@ def google_translate(
 
     # 번역 요청
     translation = client.translate(text, source_language=source, target_language=target)
+    encoded_text = translation["translatedText"].encode("utf-8")
 
     # 번역된 텍스트 반환
-    return translation["translatedText"]
+    return encoded_text
