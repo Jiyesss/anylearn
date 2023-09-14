@@ -40,6 +40,12 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.recommend_message = room.get_recommend_message()
             # gpt의 초기 설정
             assistant_message = self.get_query()
+            # gpt의 초기 설정 후 레벨 별 자막 반환
+            if self.room_level == 1:
+                translated_message = RolePlayingRoomSerializer._translate(
+                    assistant_message, "en", "ko"
+                )
+                assistant_message += f"({translated_message}) "
             # client로 전송
             self.send_json(
                 {
@@ -81,7 +87,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.send_json(
                 {
                     "type": "assistant-message",
-                    "message": "Do you save this script?",
+                    "message": "",  # 종료 후, tts 기능을 위해 공백 전달
                 }
             )
 
