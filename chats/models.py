@@ -90,7 +90,7 @@ class RolePlayingRoom(models.Model):
             f"Let us assume that the situation in '{situation_en}'. "
             f"I am {my_role_en}. The character I want you to act as is {gpt_role_en}. "
             f"Please make sure that I'm {level_string}, so please use {level_word} words "
-            f"as much as possible. Now, start a conversation with the first sentence!"
+            f"And please only answer up to 3 sentences per conversation. Now, start a conversation with the first sentence!"
         )
 
         return [
