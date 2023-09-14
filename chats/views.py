@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 from django.contrib import messages
 from django.utils.decorators import method_decorator
@@ -17,7 +18,6 @@ from users.models import User
 class Chats(APIView):
     def get(self, request):
         user = User.objects.get(email=request.user.email)
-        print(request.user, type(request.user))
         all_chats = RolePlayingRoom.objects.filter(user=user)  # pk=request.user.id
         serializer = RolePlayingRoomSerializer(
             all_chats,
@@ -67,3 +67,4 @@ class ChatDetail(APIView):
         chat = self.get_object(pk)
         chat.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
