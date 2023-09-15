@@ -1,3 +1,4 @@
+from datetime import date
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,6 +18,25 @@ class Scripts(APIView):
             all_scripts,
             many=True,
         )
+        return Response(serializer.data)
+
+    # 보고싶은 script들만 가져오기 위한 get_object()
+    def get_object(self, wantdate_year):
+        # 사용자가 보고싶은 연도 가져오기.
+        start_date = date(wantdate_year, 1, 1)
+        end_date = date(wantdate_year, 12, 31)
+
+        try:
+            return Script.objects.filter(
+                learningDate__range=(start_date, end_date), email=self.request.user
+            )
+        except Script.DoesNotExist:
+            raise NotFound
+
+    def post(self, request):
+        scripts_queryset = self.get_object(request.data["wantdate"])
+        # Script 객체 http응답으로 내보내기 위해 serializer를 통해 변환하기
+        serializer = ScriptSerializer(scripts_queryset, many=True)
         return Response(serializer.data)
 
 
