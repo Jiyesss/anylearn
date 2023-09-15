@@ -20,7 +20,7 @@ class Scripts(APIView):
         )
         return Response(serializer.data)
 
-    # 보고싶은 script들만 가져오기 위한 get_object()
+    # 보고싶은 script들만 가져오기 위한 get_object() - 날짜
     def get_object_year(self, wantdate_year):
         # 사용자가 보고싶은 연도 가져오기.
         start_date = date(wantdate_year, 1, 1)
@@ -33,11 +33,28 @@ class Scripts(APIView):
         except Script.DoesNotExist:
             raise NotFound
 
+    # 보고싶은 script들만 가져오기 위한 get_object() - 해시태그
+    def get_object_tag(self, wantdate_tag):
+        try:
+            return Script.objects.filter(
+                hashtag__tag=wantdate_tag, email=self.request.user
+            )
+        except Script.DoesNotExist:
+            raise NotFound
+
     def post(self, request):
-        scripts_queryset = self.get_object_year(request.data["wantdate"])
-        # Script 객체 http응답으로 내보내기 위해 serializer를 통해 변환하기
-        serializer = ScriptSerializer(scripts_queryset, many=True)
-        return Response(serializer.data)
+        # 날짜를 입력하면 날짜별로
+        if request.data.get("wantdate"):
+            scripts_queryset = self.get_object_year(request.data["wantdate"])
+            # Script 객체 http응답으로 내보내기 위해 serializer를 통해 변환하기
+            serializer = ScriptSerializer(scripts_queryset, many=True)
+            return Response(serializer.data)
+
+        # 해시태그를 입력하면 해시태그 별로
+        elif request.data.get("wanttag"):
+            scripts_queryset = self.get_object_tag(request.data["wanttag"])
+            serializer = ScriptSerializer(scripts_queryset, many=True)
+            return Response(serializer.data)
 
 
 # /api/v1/scripts/[pk] url에 접근했을 때 API
