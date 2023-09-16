@@ -33,11 +33,11 @@ class Scripts(APIView):
         except Script.DoesNotExist:
             raise NotFound
 
-    # 보고싶은 script들만 가져오기 위한 get_object() - 해시태그
-    def get_object_tag(self, wantdate_tag):
+    # 보고싶은 script들만 가져오기 위한 get_object() - 제목
+    def get_object_title(self, wanttitle):
         try:
             return Script.objects.filter(
-                hashtag__tag=wantdate_tag, email=self.request.user
+                title__icontains=wanttitle, email=self.request.user
             )
         except Script.DoesNotExist:
             raise NotFound
@@ -50,9 +50,9 @@ class Scripts(APIView):
             serializer = ScriptSerializer(scripts_queryset, many=True)
             return Response(serializer.data)
 
-        # 해시태그를 입력하면 해시태그 별로
-        elif request.data.get("wanttag"):
-            scripts_queryset = self.get_object_tag(request.data["wanttag"])
+        # 해시태그를 입력하면 제목 별로
+        elif request.data.get("title"):
+            scripts_queryset = self.get_object_title(request.data["title"])
             serializer = ScriptSerializer(scripts_queryset, many=True)
             return Response(serializer.data)
 
