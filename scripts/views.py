@@ -12,24 +12,35 @@ from .serializers import ScriptSerializer, ScriptTinySerializer, ScriptDetailSer
 
 # /api/v1/scripts url에 접근했을 때 API
 class Scripts(APIView):
-    def get(self, requet):
-        all_scripts = Script.objects.filter(email=self.request.user)
-        serializer = ScriptSerializer(
-            all_scripts,
-            many=True,
-        )
-        return Response(serializer.data)
+    def get(self, request):
+        # 현재 날짜를 가져와서 현재 날짜 기준 정렬된 script 목록을 보내주기.
+        year = timezone.now().date().year
+
+        return Response(self.make_list_dict(year))
+
+    def make_list_dict(self, year):
+        all_script_list = dict()
+        # year년도에 해당하는 월별 스크립트
+        for i in range(1, 13):
+            scripts_queryset = self.get_object_date(year, i)
+            serializer = ScriptSerializer(scripts_queryset, many=True)
+            all_script_list[i] = serializer.data
+        return all_script_list
 
     # 보고싶은 script들만 가져오기 위한 get_object() - 날짜
-    def get_object_year(self, wantdate_year):
-        # 사용자가 보고싶은 연도 가져오기.
-        start_date = date(wantdate_year, 1, 1)
-        end_date = date(wantdate_year, 12, 31)
-
+    def get_object_date(self, year, month):
         try:
-            return Script.objects.filter(
-                learningDate__range=(start_date, end_date), email=self.request.user
-            )
+            if year and month:
+                return Script.objects.filter(
+                    learningDate__year=year,
+                    learningDate__month=month,
+                    email=self.request.user,
+                )
+            elif year:
+                return Script.objects.filter(
+                    learningDate__year=year,
+                    email=self.request.user,
+                )
         except Script.DoesNotExist:
             raise NotFound
 
@@ -43,10 +54,14 @@ class Scripts(APIView):
             raise NotFound
 
     def post(self, request):
-        # 날짜를 입력하면 날짜별로
-        if request.data.get("wantdate"):
-            scripts_queryset = self.get_object_year(request.data["wantdate"])
-            # Script 객체 http응답으로 내보내기 위해 serializer를 통해 변환하기
+        year = request.data.get("year")
+        month = request.data.get("month")
+
+        if year and month is None:  # 연도만 요청받았을 경우
+            return Response(self.make_list_dict(year))
+
+        elif year and month:  # 연도와 월 모두 요청받았을 경우
+            scripts_queryset = self.get_object_date(year, month)
             serializer = ScriptSerializer(scripts_queryset, many=True)
             return Response(serializer.data)
 
