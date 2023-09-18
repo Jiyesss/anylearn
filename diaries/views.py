@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import status
+from datetime import datetime
 from .models import Diary
 from .serializers import DiarySerializer, TinyDiarySerializer, DiaryDetailSerializer
 
@@ -23,7 +24,8 @@ class DiaryDetail(APIView):
     # id가 아닌 date로 다이어리 찾아오기
     def get_object(self, date):
         try:
-            return Diary.objects.get(nowDate=date, user_email=self.request.user)
+            convert_date = datetime.strptime(date_string, "%Y-%m-%d")
+            return Diary.objects.get(nowDate=convert_date, user_email=self.request.user)
         except Diary.DoesNotExist:
             raise NotFound
 
