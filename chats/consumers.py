@@ -98,7 +98,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             if room:
                 message = []
                 for gpt_message in self.gpt_messages:
-                    message.append(f"{gpt_message["content"]}\n")
+                    message.append(gpt_message["content"]+"\n")
                     # message = Script(contents=gpt_message.content)
                 message = " ".join(message[2:])
 
