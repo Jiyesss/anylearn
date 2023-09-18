@@ -24,7 +24,7 @@ class DiaryDetail(APIView):
     # id가 아닌 date로 다이어리 찾아오기
     def get_object(self, date):
         try:
-            convert_date = datetime.strptime(date_string, "%Y-%m-%d")
+            convert_date = datetime.strptime(date, "%Y-%m-%d")
             return Diary.objects.get(nowDate=convert_date, user_email=self.request.user)
         except Diary.DoesNotExist:
             raise NotFound
