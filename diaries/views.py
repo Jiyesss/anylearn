@@ -49,7 +49,8 @@ class DiaryDetail(APIView):
         else:
             return Response(serializer.errors)
 
-    def delete(self, date):
+    def delete(self, request, date):
         diary = self.get_object(date)
+        diary.diaryContents.clear()
         diary.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
