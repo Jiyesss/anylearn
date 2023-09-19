@@ -17,6 +17,6 @@ register_converter(DateConverter, "date")
 
 urlpatterns = [
     path("", views.Diaries.as_view()),
-    #path("<date:date>", views.DiaryDetail.as_view()),
+    # path("<date:date>", views.DiaryDetail.as_view()),
     path("<str:date>", views.DiaryDetail.as_view()),
 ]

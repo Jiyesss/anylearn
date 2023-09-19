@@ -22,6 +22,7 @@ class DiaryDetailSerializer(ModelSerializer):
             "comment",
             "diaryContents",
         )
+
         depth = 1
 
 
@@ -33,3 +34,4 @@ class TinyDiarySerializer(ModelSerializer):
             "comment",
             "diaryContents",
         )
+        depth = 1
