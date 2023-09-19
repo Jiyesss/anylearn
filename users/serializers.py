@@ -45,7 +45,6 @@ class PrivateUserSerializer(ModelSerializer):
         model = User
         # 수정하면 안 될 부분
         exclude = (
-            "password",
             "is_superuser",
             "id",
             "is_active",
