@@ -44,6 +44,11 @@ class Me(APIView):
         else:
             return Response(serializer.errors)
 
+    def delete(self, request):
+        user = request.user
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class Users(APIView):
     def post(self, request):
