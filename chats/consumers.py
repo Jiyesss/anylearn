@@ -41,7 +41,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             # gpt의 초기 설정
             assistant_message = self.get_query()
             # gpt의 초기 설정 후 레벨 별 자막 반환
-            if self.room_level == 1:
+            if self.room_level in [1, 2, 3]:
                 translated_message = RolePlayingRoomSerializer._translate(
                     assistant_message, "en", "ko"
                 )
@@ -60,8 +60,8 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         # user의 메세지를 받아서
         if content_dict["type"] == "user-message":
             assistant_message = self.get_query(user_query=content_dict["message"])
-            # level이 1인 경우에는 번역
-            if self.room_level == 1:
+            # level 모두 한글 자막 보내기
+            if self.room_level in [1, 2, 3]:
                 translated_message = RolePlayingRoomSerializer._translate(
                     assistant_message, "en", "ko"
                 )
@@ -98,7 +98,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             if room:
                 message = []
                 for gpt_message in self.gpt_messages:
-                    message.append(gpt_message["content"]+"\n")
+                    message.append(gpt_message["content"] + "\n")
                     # message = Script(contents=gpt_message.content)
                 message = " ".join(message[2:])
 
