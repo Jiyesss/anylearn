@@ -132,6 +132,13 @@ class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
 
+    # email 중복 확인
+    def get(self, request):
+        if User.objects.filter(email=request.data["email"]):
+            return Response({"impossible": "이미 존재하는 email입니다."})
+        else:
+            return Response({"possible": "사용 가능한 email입니다."})
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
