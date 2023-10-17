@@ -39,7 +39,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             # gpt의 추천 표현
             self.recommend_message = room.get_recommend_message()
             # gpt의 초기 설정
-            assistant_message = self.get_query()
+            assistant_message, translated_message = self.get_query()
             # gpt의 초기 설정 후 레벨 별 자막 반환
             if self.room_level in [1, 2, 3]:
                 translated_message = RolePlayingRoomSerializer._translate(
