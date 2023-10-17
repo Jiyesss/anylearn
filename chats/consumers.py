@@ -166,7 +166,9 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         return room
 
     # openai api함수를 호출하는 메소드
-    def get_query(self, command_query: str = None, user_query: str = None) -> str:
+    def get_query(
+        self, command_query: str = None, user_query: str = None
+    ) -> tuple[str, str]:
         if command_query is not None and user_query is not None:
             raise ValueError("command_query 인자와 user_query 인자는 동시에 사용할 수 없습니다.")
         elif command_query is not None:
