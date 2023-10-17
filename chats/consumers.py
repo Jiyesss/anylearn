@@ -59,18 +59,22 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
     def receive_json(self, content_dict, **kwargs):
         # user의 메세지를 받아서
         if content_dict["type"] == "user-message":
-            assistant_message = self.get_query(user_query=content_dict["message"])
+            assistant_message, translated_message = self.get_query(
+                user_query=content_dict["message"]
+            )
+            """
             # level 모두 한글 자막 보내기
             if self.room_level in [1, 2, 3]:
                 translated_message = RolePlayingRoomSerializer._translate(
                     assistant_message, "en", "ko"
                 )
                 assistant_message += f"({translated_message}) "
+                """
             # 아닌 경우에는 영어만
             self.send_json(
                 {
                     "type": "assistant-message",
-                    "message": assistant_message,
+                    "message": f"{assistant_message}({translated_message})",
                 }
             )
         elif content_dict["type"] == "request-recommend-message":
@@ -178,12 +182,19 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         response_role = response_dict["choices"][0]["message"]["role"]
         response_content = response_dict["choices"][0]["message"]["content"]
 
+        # 번역된 문장을 script에 추가하기 위해.
+        translated_message = RolePlayingRoomSerializer._translate(
+            response_content, "en", "ko"
+        )
+
         # 추천기능 시에는 대화내역에 추가 안함.
         if command_query is None:
-            gpt_message = GptMessage(role=response_role, content=response_content)
+            gpt_message = GptMessage(
+                role=response_role, content=f"{response_content}({translated_message})"
+            )
             self.gpt_messages.append(gpt_message)
 
-        return response_content
+        return response_content, translated_message
 
 
 class MyConsumer(JsonWebsocketConsumer):
