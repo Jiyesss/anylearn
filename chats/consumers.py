@@ -161,21 +161,24 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         print(response_content, type(response_content))  # 제대로 출력되나 확인용도
 
         # '(' 문자가 나오는 인덱스를 찾기
-        start_index = response_content.index("(")
-        # 시작 인덱스 이후의 모든 문자열을 자르기
-        response_content = response_content[start_index:]
+        try:
+            start_index = response_content.index("(")
+            result_string = response_content[start_index:]
+        except ValueError:
+            # '(' 문자가 없을 때의 처리
+            result_string = response_content
 
         # 번역된 문장을 script에 추가하기 위해.
         translated_message = RolePlayingRoomSerializer._translate(
-            response_content, "en", "ko"  # 번역하고자 하는 문장을 인자로 전달
+            result_string, "en", "ko"  # 번역하고자 하는 문장을 인자로 전달
         )
 
         gpt_message = GptMessage(
-            role=response_role, content=f"{response_content}({translated_message})"
+            role=response_role, content=f"{result_string}({translated_message})"
         )
         self.gpt_messages.append(gpt_message)
 
-        return f"{response_content}({translated_message})"
+        return f"{result_string}({translated_message})"
 
 
 class MyConsumer(JsonWebsocketConsumer):
