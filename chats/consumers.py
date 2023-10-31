@@ -36,8 +36,6 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.gpt_messages = room.get_initial_messages()
             # user의 level 설정
             self.room_level = room.level
-            # gpt의 추천 표현
-            self.recommend_message = room.get_recommend_message()
             # gpt의 초기 설정(모든 레벨 다 한글 자막 전달하기)
             assistant_message = self.get_query()
             # client로 전송
@@ -144,7 +142,8 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
     # openai api함수를 호출하는 메소드
     def get_query(self, user_query: str = None) -> str:
         # 유저의 입력을 전체 리스트에 추가
-        self.gpt_messages.append(GptMessage(role="user", content=user_query))
+        if user_query is not None:
+            self.gpt_messages.append(GptMessage(role="user", content=user_query))
 
         # gpt에게 답변 생성 요청
         response_dict = openai.ChatCompletion.create(
