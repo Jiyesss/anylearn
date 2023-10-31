@@ -183,11 +183,15 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             temperature=1,
         )
         response_role = response_dict["choices"][0]["message"]["role"]
-        response_content = response_dict["choices"][0]["message"]["content"]
+        response_content = response_dict["choices"][0]["message"][
+            "content"
+        ]  # 단일 문자열 반환됨
+
+        print(response_content, type(response_content))
 
         # 번역된 문장을 script에 추가하기 위해.
         translated_message = RolePlayingRoomSerializer._translate(
-            response_content, "en", "ko"
+            response_content, "en", "ko"  # 번역하고자 하는 문장을 인자로 전달
         )
 
         # 추천기능 시에는 대화내역에 추가 안함.
