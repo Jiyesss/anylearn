@@ -45,7 +45,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                 translated_message = RolePlayingRoomSerializer._translate(
                     assistant_message, "en", "ko"
                 )
-                assistant_message += f"({translated_message}) "
+                assistant_message += translated_message
             # client로 전송
             self.send_json(
                 {
