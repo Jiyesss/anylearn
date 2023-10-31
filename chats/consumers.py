@@ -39,13 +39,13 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             # gpt의 추천 표현
             self.recommend_message = room.get_recommend_message()
             # gpt의 초기 설정
-            assistant_message, translated_message = self.get_query()
+            assistant_message = self.get_query()
             # gpt의 초기 설정 후 레벨 별 자막 반환
             if self.room_level in [1, 2, 3]:
                 translated_message = RolePlayingRoomSerializer._translate(
                     assistant_message, "en", "ko"
                 )
-                assistant_message += f"({translated_message}) "
+                assistant_message += f"({translated_message})"
             # client로 전송
             self.send_json(
                 {
@@ -69,7 +69,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     assistant_message, "en", "ko"
                 )
                 assistant_message += f"({translated_message}) "
-                """
+            """
             # 아닌 경우에는 영어만
             self.send_json(
                 {
@@ -84,8 +84,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.send_json(
                 {
                     "type": "recommended-message",
-                    "message": f"{recommended_message}({translated_message})",
-                }
+                    "message": f"{recommended_message}({translated_message})",                }
             )
 
         # 종료하기
