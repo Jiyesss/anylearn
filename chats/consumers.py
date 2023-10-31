@@ -38,16 +38,8 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.room_level = room.level
             # gpt의 추천 표현
             self.recommend_message = room.get_recommend_message()
-            # gpt의 초기 설정
+            # gpt의 초기 설정(모든 레벨 다 한글 자막 전달하기)
             assistant_message = self.get_query()
-            # gpt의 초기 설정 후 레벨 별 자막 반환 -> 두 번 번역되고 있는 듯 함.
-            """if self.room_level in [1, 2, 3]:
-                translated_message = RolePlayingRoomSerializer._translate(
-                    assistant_message, "en", "ko"
-                )
-                assistant_message += f"({translated_message}) "
-            """
-
             # client로 전송
             self.send_json(
                 {
@@ -61,32 +53,21 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
     def receive_json(self, content_dict, **kwargs):
         # user의 메세지를 받아서
         if content_dict["type"] == "user-message":
-            assistant_message, translated_message = self.get_query(
-                user_query=content_dict["message"]
-            )
-            """
-            # level 모두 한글 자막 보내기
-            if self.room_level in [1, 2, 3]:
-                translated_message = RolePlayingRoomSerializer._translate(
-                    assistant_message, "en", "ko"
-                )
-                assistant_message += f"({translated_message}) "
-            """
+            assistant_message = self.get_query(user_query=content_dict["message"])
             # 아닌 경우에는 영어만
             self.send_json(
                 {
                     "type": "assistant-message",
-                    "message": f"{assistant_message}({translated_message})",
+                    "message": assistant_message,
                 }
             )
         elif content_dict["type"] == "request-recommend-message":
-            recommended_message, translated_message = self.get_query(
-                command_query=self.recommend_message
-            )
+            recommended_message = self.get_query(command_query=self.recommend_message)
             self.send_json(
                 {
                     "type": "recommended-message",
-                    "message": f"{recommended_message}({translated_message})",                }
+                    "message": recommended_message,
+                }
             )
 
         # 종료하기
@@ -187,7 +168,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             "content"
         ]  # 단일 문자열 반환됨
 
-        print(response_content, type(response_content))
+        print(response_content, type(response_content))  # 제대로 출력되나 확인용도
 
         # 번역된 문장을 script에 추가하기 위해.
         translated_message = RolePlayingRoomSerializer._translate(
