@@ -15,7 +15,7 @@ def google_translate(
 ):
     print(text, type(text))
     # 문자열 입력 이후 좌우 공백을 제거하고 빈 문자열인지 확인
-    text = text[0].strip()
+    text = text.strip()
     if not text:
         return ""
 
