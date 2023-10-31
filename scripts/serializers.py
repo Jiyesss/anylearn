@@ -1,132 +1,95 @@
 from django.utils import timezone
-from rest_framework.serializers import ModelSerializer, SlugRelatedField
-from .models import Script, Tag
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
+from rest_framework import status
+import openai
+from .models import Script
 from diaries.models import Diary
+from .serializers import ScriptSerializer, ScriptTinySerializer, ScriptDetailSerializer
 
 
-# detail화면에서 email을 간단히 보기 위한 serializer
-class TinyEmailSerializer(ModelSerializer):
-    class Meta:
-        model = Script
-        fields = ("email",)
+# /api/v1/scripts url에 접근했을 때 API
+class Scripts(APIView):
+    def get(self, requet):
+        all_scripts = Script.objects.filter(email=self.request.user)
+        serializer = ScriptSerializer(
+            all_scripts,
+            many=True,
+        )
+        return Response(serializer.data)
 
 
-class TagSerializer(ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ["tag"]
+# /api/v1/scripts/[pk] url에 접근했을 때 API
+class ScriptDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Script.objects.get(pk=pk, email=self.request.user)
+        except Script.DoesNotExist:
+            raise NotFound
 
+    def get_diary(self, script, date):
+        try:
+            return Diary.objects.get(nowDate=date, user_email=self.request.user)
+        except Diary.DoesNotExist:
+            return None
 
-# put요청할 때, 원하는 필드만 입력받기 위한 serializer
-class ScriptTinySerializer(ModelSerializer):
-    hashtag = TagSerializer(many=True)
+    def get(self, request, pk):
+        script = self.get_object(pk)
+        serializer = ScriptDetailSerializer(script)
+        return Response(serializer.data)
 
-    class Meta:
-        model = Script
-        fields = ("hashtag", "contents", "add_diary", "show_expr", "input_expr")
+    def put(self, request, pk):
+        script = self.get_object(pk)
+        serializer = ScriptTinySerializer(
+            script,
+            data=request.data,
+            partial=True,  # partial = True는 필수 항목을 수정하지 않아도 error안난다는 의미
+        )
+        if serializer.is_valid():
+            updated_script = serializer.save()
+            response_data = ScriptTinySerializer(updated_script).data
 
-    def get_serializer_context(self):
-        return {"request": self.request}
+            # "show_expr" 값이 1인 경우 처리
+            # openai.api_key = 'your-api-key'
+            show_expr = request.data.get("show_expr", None)
+            input_expr = request.data.get("input_expr", None)
+            if show_expr == 1:
+                response = openai.Completion.create(
+                    engine="text-davinci-002",
+                    prompt=f"Rewrite the following sentence in a different way: '{input_expr}'",
+                    max_tokens=60,
+                )
+                response_data["paraphrase"] = response.choices[0].text.strip()
 
-    def hashtag_update(self, hashtag_data, instance):
-        # 변경된 해시태그 존재 시, 업데이트 후 반환하기
-        if hashtag_data is not None:
-            instance.hashtag.clear()
-            for tag_data in hashtag_data:
-                tag, created = Tag.objects.get_or_create(tag=tag_data["tag"])
-                instance.hashtag.add(tag)
-        return instance
+            # "add_diary" 값이 1인 경우 처리
+            add_diary = request.data.get("add_diary", None)
+            if add_diary == 1:
+                # 현재 날짜 가져오기
+                current_date = timezone.now().date()
 
-    def update(self, instance, validated_data):
-        if "hashtag" in validated_data:
-            # hashtag 데이터 추출 후 삭제
-            hashtag_data = validated_data.pop("hashtag", [])
+                # 같은 날짜의 Diary 가져오기
+                diary = self.get_diary(updated_script, current_date)
 
-            # 나머지 필드 업데이트
-            instance.contents = validated_data.get("contents", instance.contents)
-            instance.add_diary = validated_data.get("add_diary", instance.add_diary)
-            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
-            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
-            instance.save()
+                # Diary가 없다면 새로 생성
+                if not diary:
+                    diary = Diary.objects.create(
+                        nowDate=current_date,
+                        comment="",
+                        user_email=request.user,
+                    )
 
-            # hashtag 필드 업데이트 적용
-            instance = self.hashtag_update(hashtag_data, instance)
+                # 생성된 diary와 script 연결
+                diary.diaryContents.add(updated_script)
+                diary.save()
+                response_data["diary_added"] = True
 
-            return instance
+            return Response(response_data)
+        else:
+            return Response(serializer.errors)
 
-        elif "contents" in validated_data:
-            # contents 데이터 추출 및 업데이트
-            instance.contents = validated_data.get("contents", instance.contents)
+    def delete(self, request, pk):
+        script = self.get_object(pk)
+        script.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-            # 나머지 필드 업데이트
-            hashtag_data = validated_data.pop("hashtag", None)
-            instance = self.hashtag_update(hashtag_data, instance)
-            instance.add_diary = validated_data.get("add_diary", instance.add_diary)
-            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
-            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
-            instance.save()
-
-            return instance
-
-        elif "show_expr" in validated_data:
-            # show_expr 데이터 추출 및 업데이트
-            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
-
-            # 나머지 필드 업데이트
-            hashtag_data = validated_data.pop("hashtag", None)
-            instance = self.hashtag_update(hashtag_data, instance)
-            instance.add_diary = validated_data.get("add_diary", instance.add_diary)
-            instance.contents = validated_data.get("contents", instance.contents)
-            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
-            instance.save()
-
-            return instance
-
-        elif "input_expr" in validated_data:
-            # input_expr 데이터 추출 및 업데이트
-            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
-
-            # 나머지 필드 업데이트
-            hashtag_data = validated_data.pop("hashtag", None)
-            instance = self.hashtag_update(hashtag_data, instance)
-            instance.add_diary = validated_data.get("add_diary", instance.add_diary)
-            instance.contents = validated_data.get("contents", instance.contents)
-            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
-            instance.save()
-
-            return instance
-
-        elif "add_diary" in validated_data:
-            # 나머지 필드 업데이트
-            instance.contents = validated_data.get("contents", instance.contents)
-            hashtag_data = validated_data.pop("hashtag", None)
-            instance = self.hashtag_update(hashtag_data, instance)
-            instance.add_diary = validated_data.get("add_diary", instance.add_diary)
-            instance.input_expr = validated_data.get("input_expr", instance.input_expr)
-            instance.show_expr = validated_data.get("show_expr", instance.show_expr)
-            instance.save()
-
-            return instance
-
-
-# 전체 scripts를 보기 위한 serializer
-class ScriptSerializer(ModelSerializer):
-    hashtag = SlugRelatedField(
-        queryset=Tag.objects.all(),
-        slug_field="tag",
-        many=True,
-    )
-
-    class Meta:
-        model = Script
-        fields = "__all__"
-
-
-# datil script를 보기 위한 serializer
-class ScriptDetailSerializer(ModelSerializer):
-    email = TinyEmailSerializer()
-    hashtag = TagSerializer(many=True)
-
-    class Meta:
-        model = Script
-        fields = "__all__"

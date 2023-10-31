@@ -47,6 +47,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                 )
                 assistant_message += f"({translated_message}) "
             """
+
             # client로 전송
             self.send_json(
                 {
@@ -85,8 +86,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.send_json(
                 {
                     "type": "recommended-message",
-                    "message": f"{recommended_message}({translated_message})",
-                }
+                    "message": f"{recommended_message}({translated_message})",                }
             )
 
         # 종료하기
