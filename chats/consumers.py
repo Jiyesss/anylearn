@@ -163,7 +163,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         # '(' 문자가 나오는 인덱스를 찾기
         try:
             start_index = response_content.index("(")
-            result_string = response_content[start_index:]
+            result_string = response_content[:start_index]
         except ValueError:
             # '(' 문자가 없을 때의 처리
             result_string = response_content
