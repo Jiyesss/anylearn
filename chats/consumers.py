@@ -169,9 +169,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         return room
 
     # openai api함수를 호출하는 메소드
-    def get_query(
-        self, command_query: str = None, user_query: str = None
-    ) -> tuple[str, str]:
+    def get_query(self, command_query: str = None, user_query: str = None) -> str:
         if command_query is not None and user_query is not None:
             raise ValueError("command_query 인자와 user_query 인자는 동시에 사용할 수 없습니다.")
         elif command_query is not None:
@@ -203,7 +201,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             )
             self.gpt_messages.append(gpt_message)
 
-        return response_content, translated_message
+        return f"{response_content}({translated_message})"
 
 
 class MyConsumer(JsonWebsocketConsumer):
