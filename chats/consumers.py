@@ -69,7 +69,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     assistant_message, "en", "ko"
                 )
                 assistant_message += f"({translated_message}) "
-                """
+            """
             # 아닌 경우에는 영어만
             self.send_json(
                 {
