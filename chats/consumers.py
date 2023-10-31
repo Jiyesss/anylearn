@@ -74,7 +74,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.send_json(
                 {
                     "type": "assistant-message",
-                    "message": f"{assistant_message}({translated_message})",
+                    "message": f"{assistant_message}{translated_message}",
                 }
             )
         elif content_dict["type"] == "request-recommend-message":
@@ -84,7 +84,7 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             self.send_json(
                 {
                     "type": "recommended-message",
-                    "message": f"{recommended_message}({translated_message})",
+                    "message": f"{recommended_message}{translated_message}",
                 }
             )
 
