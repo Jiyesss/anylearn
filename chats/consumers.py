@@ -61,14 +61,6 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
                     "message": assistant_message,
                 }
             )
-        elif content_dict["type"] == "request-recommend-message":
-            recommended_message = self.get_query(command_query=self.recommend_message)
-            self.send_json(
-                {
-                    "type": "recommended-message",
-                    "message": recommended_message,
-                }
-            )
 
         # 종료하기
         elif content_dict["type"] == "end-conversation":
@@ -150,19 +142,18 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
         return room
 
     # openai api함수를 호출하는 메소드
-    def get_query(self, command_query: str = None, user_query: str = None) -> str:
-        if command_query is not None and user_query is not None:
-            raise ValueError("command_query 인자와 user_query 인자는 동시에 사용할 수 없습니다.")
-        elif command_query is not None:
-            self.gpt_messages.append(GptMessage(role="user", content=command_query))
-        elif user_query is not None:
-            self.gpt_messages.append(GptMessage(role="user", content=user_query))
+    def get_query(self, user_query: str = None) -> str:
+        # 유저의 입력을 전체 리스트에 추가
+        self.gpt_messages.append(GptMessage(role="user", content=user_query))
 
+        # gpt에게 답변 생성 요청
         response_dict = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=self.gpt_messages,
             temperature=1,
         )
+
+        # 답변받은 부분들 중 원하는 부분만 추출하기 (role, message)
         response_role = response_dict["choices"][0]["message"]["role"]
         response_content = response_dict["choices"][0]["message"][
             "content"
@@ -175,12 +166,10 @@ class RolePlayingRoomConsumer(JsonWebsocketConsumer):
             response_content, "en", "ko"  # 번역하고자 하는 문장을 인자로 전달
         )
 
-        # 추천기능 시에는 대화내역에 추가 안함.
-        if command_query is None:
-            gpt_message = GptMessage(
-                role=response_role, content=f"{response_content}({translated_message})"
-            )
-            self.gpt_messages.append(gpt_message)
+        gpt_message = GptMessage(
+            role=response_role, content=f"{response_content}({translated_message})"
+        )
+        self.gpt_messages.append(gpt_message)
 
         return f"{response_content}({translated_message})"
 
