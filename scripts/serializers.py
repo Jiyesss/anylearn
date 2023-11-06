@@ -2,8 +2,6 @@ from django.utils import timezone
 from rest_framework.serializers import ModelSerializer, SlugRelatedField
 from .models import Script, Tag
 from diaries.models import Diary
-
-
 # detail화면에서 email을 간단히 보기 위한 serializer
 class TinyEmailSerializer(ModelSerializer):
     class Meta:
@@ -130,4 +128,3 @@ class ScriptDetailSerializer(ModelSerializer):
     class Meta:
         model = Script
         fields = "__all__"
-
