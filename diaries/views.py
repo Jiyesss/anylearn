@@ -51,6 +51,9 @@ class DiaryDetail(APIView):
 
     def delete(self, request, date):
         diary = self.get_object(date)
+        for content in diary.diaryContents.all():
+            content.add_diary = 0
+            content.save()
         diary.diaryContents.clear()
         diary.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
