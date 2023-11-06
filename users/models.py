@@ -72,6 +72,7 @@ class User(AbstractUser):
         max_length=30,
     )
     avatar = models.URLField(
+        max_length=1000,  # 예: 1000자로 확장
         blank=True,
     )
     birth = models.CharField(
