@@ -188,3 +188,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 APPEND_SLASH = False
 CSRF_COOKIE_SAMESITE = None
+
+# 이미지 사진 업로드
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
